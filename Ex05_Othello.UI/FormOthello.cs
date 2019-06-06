@@ -24,6 +24,7 @@ namespace Ex05_Othello.UI
         private void configureGameSettings(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
             m_GameLogic.configureGameSettings(i_BoardSize, i_GameMode);
+            m_GameLogic.initialize();
         }
 
         private void createGameBoard()
@@ -36,13 +37,20 @@ namespace Ex05_Othello.UI
 
         Button btn(int i)
         {
-            Button b = new Button();
-            b.Name = i.ToString();
-            b.Width = 40;
-            b.Height = 40;
-            b.Text = i.ToString();
+            Button button = new Button();
+            button.Name = i.ToString();
+            button.Width = 40;
+            button.Height = 40;
+            button.Text = i.ToString();
+            button.Click += buttonCell_Click;
+            return button;
+        }
 
-            return b;
+
+        private void buttonCell_Click(object sender, EventArgs e)
+        {
+            //m_GameLogic.;
+            MessageBox.Show((sender as Button).Text);
         }
 
         private void button1_Click(object sender, EventArgs e)
