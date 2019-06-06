@@ -12,6 +12,7 @@ namespace Ex05_Othello.UI
     public partial class FormGameSettings : Form
     {
         private Board.eBoardSize m_BoardSize = Board.eBoardSize.size6x6;
+        private GameLogic.eGameMode m_GameMode;
 
         public FormGameSettings()
         {
@@ -43,18 +44,36 @@ namespace Ex05_Othello.UI
 
             set
             {
+
                 m_BoardSize = value;
+            }
+        }
+
+        public GameLogic.eGameMode GameMode
+        {
+            get
+            {
+
+                return m_GameMode;
+            }
+
+            set
+            {
+
+                m_GameMode = value;
             }
         }
 
         private void buttonPlayHumanVsPC_Click(object sender, EventArgs e)
         {
-
+            m_GameMode = GameLogic.eGameMode.HumanVsPC;
+            Close();
         }
 
         private void buttonPlayHumanVsHuman_Click(object sender, EventArgs e)
         {
-
+            m_GameMode = GameLogic.eGameMode.HumanVsHuman;
+            Close();
         }
     }
 }

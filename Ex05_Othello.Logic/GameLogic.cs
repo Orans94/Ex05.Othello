@@ -26,5 +26,71 @@ namespace Ex05_Othello.Logic
             Right = 1,
             NoDirection = 0
         }
+
+        private Board m_GameBoard;
+        private List<Cell> m_BlackPlayerOptions = new List<Cell>();
+        private List<Cell> m_WhitePlayerOptions = new List<Cell>();
+        private GameUtilities.ePlayerColor m_PlayerTurn;
+        private eGameMode m_GameMode;
+
+        public List<Cell> WhitePlayerOptions
+        {
+            // a propertie for m_WhitePlayerOptions
+            get
+            {
+
+                return m_WhitePlayerOptions;
+            }
+        }
+
+        public GameUtilities.ePlayerColor Turn
+        {
+            // a propertie for m_PlayerTurn
+            get
+            {
+
+                return m_PlayerTurn;
+            }
+
+            set
+            {
+                m_PlayerTurn = value;
+            }
+        }
+
+        public eGameMode Mode
+        {
+            // a propertie for m_GameMode
+            get
+            {
+
+                return m_GameMode;
+            }
+
+            set
+            {
+                m_GameMode = value;
+            }
+        }
+
+        public Board GameBoard
+        {
+            // a propertie for m_GameBoard.
+            get
+            {
+
+                return m_GameBoard;
+            }
+        }
+
+        public List<Cell> BlackPlayerOptions
+        {
+            // a propertie for m_BlackPlayerOptions
+            get
+            {
+
+                return m_BlackPlayerOptions;
+            }
+        }
     }
 }

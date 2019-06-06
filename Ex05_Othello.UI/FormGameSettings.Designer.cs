@@ -70,6 +70,7 @@
             this.Controls.Add(this.buttonPlayHumanVsHuman);
             this.Controls.Add(this.buttonPlayHumanVsPC);
             this.Controls.Add(this.buttonBoardSize);
+            this.MaximizeBox = false;
             this.Name = "FormGameSettings";
             this.Text = "Othello - Game Settings";
             this.ResumeLayout(false);
