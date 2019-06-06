@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Ex05_Othelo.UI
+
+namespace Ex05_Othello.UI
 {
     static class Program
     {
@@ -12,9 +13,8 @@ namespace Ex05_Othelo.UI
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            UIManager othello = new UIManager();
+            othello.Run();
         }
     }
 }
