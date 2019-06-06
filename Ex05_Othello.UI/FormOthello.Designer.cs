@@ -6,7 +6,7 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
+        
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -28,25 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.flowLayoutPanelBoard = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
-            // button1
+            // flowLayoutPanelBoard
             // 
-            this.button1.Location = new System.Drawing.Point(140, 68);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(334, 138);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.flowLayoutPanelBoard.Location = new System.Drawing.Point(12, 12);
+            this.flowLayoutPanelBoard.Name = "flowLayoutPanelBoard";
+            this.flowLayoutPanelBoard.Size = new System.Drawing.Size(413, 426);
+            this.flowLayoutPanelBoard.TabIndex = 0;
             // 
             // FormOthello
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(695, 450);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(438, 450);
+            this.Controls.Add(this.flowLayoutPanelBoard);
             this.Name = "FormOthello";
             this.Text = "FormOthello";
             this.ResumeLayout(false);
@@ -55,6 +52,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBoard;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBoard;
     }
 }

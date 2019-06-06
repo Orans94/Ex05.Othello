@@ -17,19 +17,32 @@ namespace Ex05_Othello.UI
         {
             InitializeComponent();
             //initializeBoardSize(i_BoardSize);
-            configureBoardSize(i_BoardSize);
-            configureGameMode(i_GameMode);
-
+            configureGameSettings(i_BoardSize, i_GameMode);
+            createGameBoard();
         }
 
-        private void configureGameMode(GameLogic.eGameMode i_GameMode)
+        private void configureGameSettings(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
-            m_GameLogic.Mode = i_GameMode;
+            m_GameLogic.configureGameSettings(i_BoardSize, i_GameMode);
         }
 
-        private void configureBoardSize(Board.eBoardSize i_BoardSize)
+        private void createGameBoard()
         {
-            m_GameLogic.GameBoard.Size = i_BoardSize;
+            for (int i = 0; i < (int)m_GameLogic.GameBoard.Size* (int)m_GameLogic.GameBoard.Size; i++)
+            {
+                flowLayoutPanelBoard.Controls.Add(btn(i));
+            }
+        }
+
+        Button btn(int i)
+        {
+            Button b = new Button();
+            b.Name = i.ToString();
+            b.Width = 40;
+            b.Height = 40;
+            b.Text = i.ToString();
+
+            return b;
         }
 
         private void button1_Click(object sender, EventArgs e)

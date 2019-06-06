@@ -33,6 +33,22 @@ namespace Ex05_Othello.Logic
         private GameUtilities.ePlayerColor m_PlayerTurn;
         private eGameMode m_GameMode;
 
+        public void configureGameSettings(Board.eBoardSize i_BoardSize, eGameMode i_GameMode)
+        {
+            m_GameBoard = new Board(i_BoardSize);
+            m_GameMode = i_GameMode;
+            if (userGameModeChoice == eGameMode.HumanVsHuman)
+            {
+                i_BlackHumanPlayer.Active = true;
+                blackPlayerName = UI.AskUserForUserName();
+                i_BlackHumanPlayer.Name = blackPlayerName;
+            }
+            else
+            {
+                i_BlackPCPlayer.Active = true;
+            }
+        }
+
         public List<Cell> WhitePlayerOptions
         {
             // a propertie for m_WhitePlayerOptions
