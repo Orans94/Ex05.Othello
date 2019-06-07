@@ -43,18 +43,32 @@ namespace Ex05_Othello.Logic
 
         public void getPlayersCurrentRoundScores(out int i_WhitePlayerRoundScore, out int i_BlackPlayerRoundScore)
         {
-            i_WhitePlayerRoundScore = m_Players[0].RoundScore;
-            i_BlackPlayerRoundScore = m_Players[1].RoundScore;
+            i_WhitePlayerRoundScore = m_Players[(int)Player.ePlayerColor.White].RoundScore;
+            i_BlackPlayerRoundScore = m_Players[(int)Player.ePlayerColor.Black].RoundScore;
         }
 
-        public void getCurrentRoundWinner(out string i_WinnerColor)
+        public void getCurrentRoundWinner(out string i_WinnerColor, out bool io_IsGameEndedInTie)
         {
-            throw new NotImplementedException();
+            io_IsGameEndedInTie = isGameEndedInTie();
+            if (io_IsGameEndedInTie)
+            {
+                i_WinnerColor = string.Empty;
+            }
+            else
+            {
+                i_WinnerColor = m_Players[(int)Player.ePlayerColor.White].RoundScore > m_Players[(int)Player.ePlayerColor.Black].RoundScore ? "White" : "Black";
+            }
+        }
+
+        private bool isGameEndedInTie()
+        {
+            return m_Players[(int)Player.ePlayerColor.White].RoundScore == m_Players[(int)Player.ePlayerColor.Black].RoundScore;
         }
 
         public void getPlayersOverallScores(out int i_WhitePlayerOverallScore, out int i_BlackPlayerOverallScore)
         {
-            throw new NotImplementedException();
+            i_WhitePlayerOverallScore = m_Players[(int)Player.ePlayerColor.White].OverallScore;
+            i_BlackPlayerOverallScore = m_Players[(int)Player.ePlayerColor.Black].OverallScore;
         }
 
         public GameLogic()
@@ -101,7 +115,7 @@ namespace Ex05_Othello.Logic
             //5.update player scores
             updatePlayersScore();
             //6.turn changing
-            turnChangingManager();
+            manageTurnChanging();
             //7.check if game over
 
             //  7.1 if game over - UI should know and print message of winner etc...
@@ -137,10 +151,35 @@ namespace Ex05_Othello.Logic
             return isOptionListEmpty;
         }
 
-        private void restartGame()
+        public void RestartGame()
         {
             // this method restarts a game.
+            //1.update overall scores
+            updateWinnerOverallScore();
+            //2. initialize all
             Initialize();
+        }
+
+        private void updateWinnerOverallScore()
+        {
+            // this method checks who is the winner of the game and
+            int whitePlayerScore, blackPlayerScore;
+
+            whitePlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.White);
+            blackPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Black);
+            if (whitePlayerScore > blackPlayerScore)
+            {
+                m_Players[(int)Player.ePlayerColor.White].OverallScore++;
+            }
+            else if (whitePlayerScore < blackPlayerScore)
+            {
+                m_Players[(int)Player.ePlayerColor.Black].OverallScore++;
+            }
+            else
+            {
+                m_Players[(int)Player.ePlayerColor.White].OverallScore++;
+                m_Players[(int)Player.ePlayerColor.Black].OverallScore++;
+            }
         }
 
         private void updatePlayersScore()
@@ -154,7 +193,7 @@ namespace Ex05_Othello.Logic
             m_Players[1].RoundScore = updatedBlackPlayerScore;
         }
 
-        private void turnChangingManager()
+        private void manageTurnChanging()
         {
             // this method is managing the players turn changing
             if (m_PlayerTurn == Player.ePlayerColor.Black && m_WhitePlayerOptions.Count > 0)
@@ -173,11 +212,14 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        private void extractCellIndex(string i_CellName, out int rowIndex, out int columnIndex)
+        private void extractCellIndex(string i_CellName, out int o_RowIndex, out int o_ColumnIndex)
         {
             // this method get a button name and assign the row and column.
-            throw new NotImplementedException();
-            
+            string cellName;
+
+            cellName = i_CellName.Replace("button", string.Empty);
+            o_ColumnIndex = cellName[0] - 'A';
+            o_RowIndex = cellName[1] - '1';
         }
 
         private void setGameParticipants()
@@ -204,11 +246,11 @@ namespace Ex05_Othello.Logic
             // this method is initializing the player options, scores and board.
             m_GameBoard.Initialize();
             initializePlayersOptions();
-            initializePlayersScores();
+            initializePlayersCurrentRoundScores();
             m_PlayerTurn = Player.ePlayerColor.White;
         }
 
-        private void initializePlayersScores()
+        private void initializePlayersCurrentRoundScores()
         {
             // this method is initializing the players scores
             foreach(Player player in m_Players)
