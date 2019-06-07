@@ -24,16 +24,16 @@ namespace Ex05_Othello.Logic
             else
             {
                 gameMangaerAI.updatePlayersOptions();
-                if (i_MaximizingPlayer == Player.ePlayerColor.Black) 
+                if (i_MaximizingPlayer == Player.ePlayerColor.Red) 
                 {
                     // this is PC's turn - Choose max value
                     maxEval = int.MinValue;
-                    foreach (Cell cellIteator in gameMangaerAI.BlackPlayerOptions)
+                    foreach (Cell cellIteator in gameMangaerAI.RedPlayerOptions)
                     {
                         copiedBoard = gameMangaerAI.GameBoard.Clone();
                         gameMangaerAI.isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref playerOptionList);
                         copiedBoard.UpdateBoard(playerOptionList, i_MaximizingPlayer);
-                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.White, ref io_Cell, ref i_ListOfKeyValue);
+                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.Yellow, ref io_Cell, ref i_ListOfKeyValue);
                         if (eval > maxEval)
                         {
                             playerMovesList.Add(io_Cell);
@@ -51,12 +51,12 @@ namespace Ex05_Othello.Logic
                 {
                 // this is Human player - Choose min value
                     minEval = int.MaxValue;
-                    foreach (Cell cellIteator in gameMangaerAI.WhitePlayerOptions)
+                    foreach (Cell cellIteator in gameMangaerAI.YellowPlayerOptions)
                     {
                         copiedBoard = gameMangaerAI.GameBoard.Clone();
                         gameMangaerAI.isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref playerOptionList);
                         copiedBoard.UpdateBoard(playerOptionList, i_MaximizingPlayer);
-                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.Black, ref io_Cell, ref i_ListOfKeyValue);
+                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.Red, ref io_Cell, ref i_ListOfKeyValue);
                         if (eval < minEval)
                         {
                             playerMovesList.Add(io_Cell);
@@ -74,11 +74,11 @@ namespace Ex05_Othello.Logic
         private static int differencePCScoreHumanScore(Board i_GameBoardState)
         {
             // this method calculate the difference between the PC player score and the human score and return it
-            int whiteCharsInBoard, blackCharsInBoard, difference;
+            int yellowCharsInBoard, redCharsInBoard, difference;
 
-            whiteCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.White);
-            blackCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.Black);
-            difference = blackCharsInBoard - whiteCharsInBoard;
+            yellowCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.Yellow);
+            redCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.Red);
+            difference = redCharsInBoard - yellowCharsInBoard;
 
             return difference;
         }
@@ -113,7 +113,7 @@ namespace Ex05_Othello.Logic
             Cell chosenCell = new Cell();
             List<KeyValuePair<int, List<Cell>>> listOfScoreAndMoveList = new List<KeyValuePair<int, List<Cell>>>();
 
-            minmaxOutput = Minimax(i_GameBoard, 2, Player.ePlayerColor.Black, ref chosenCell, ref listOfScoreAndMoveList);
+            minmaxOutput = Minimax(i_GameBoard, 2, Player.ePlayerColor.Red, ref chosenCell, ref listOfScoreAndMoveList);
 
             // sorting the list of heuristic scores and moves that lead them,
             // sorting this list by their score.
@@ -160,7 +160,7 @@ namespace Ex05_Othello.Logic
 
             heuristicResult = 0;
             differencePCHuman = differencePCScoreHumanScore(i_Board);
-            playerTurnSign = i_playerTurn == Player.ePlayerColor.Black ? (char)Player.ePlayerColor.Black : (char)Player.ePlayerColor.White;
+            playerTurnSign = i_playerTurn == Player.ePlayerColor.Red ? (char)Player.ePlayerColor.Red : (char)Player.ePlayerColor.Yellow;
             heuristicResult += getCornersHeuristic(i_Board, playerTurnSign);
             return heuristicResult + differencePCHuman;
         }

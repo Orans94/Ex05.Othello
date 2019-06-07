@@ -79,22 +79,12 @@ namespace Ex05_Othello.Logic
 
         public void Initialize()
         {
-            //TODO: change from char to Player.ePlayerColor
+            int difference = ((int)m_BoardSize - (int)Board.eBoardSize.size6x6) / 2;
             clear();
-            if (Size == eBoardSize.size8x8)
-            {
-                m_Board[3, 3].Sign = (char)Player.ePlayerColor.White;
-                m_Board[4, 3].Sign = (char)Player.ePlayerColor.Black;
-                m_Board[4, 4].Sign = (char)Player.ePlayerColor.White;
-                m_Board[3, 4].Sign = (char)Player.ePlayerColor.Black;
-            }
-            else if (Size == eBoardSize.size6x6)
-            {
-                m_Board[2, 2].Sign = (char)Player.ePlayerColor.White;
-                m_Board[3, 2].Sign = (char)Player.ePlayerColor.Black;
-                m_Board[3, 3].Sign = (char)Player.ePlayerColor.White;
-                m_Board[2, 3].Sign = (char)Player.ePlayerColor.Black;
-            }
+            m_Board[2 + difference, 2 + difference].Sign = (char)Player.ePlayerColor.Yellow;
+            m_Board[3 + difference, 2 + difference].Sign = (char)Player.ePlayerColor.Red;
+            m_Board[3 + difference, 3 + difference].Sign = (char)Player.ePlayerColor.Yellow;
+            m_Board[2 + difference, 3 + difference].Sign = (char)Player.ePlayerColor.Red;
         }
 
         private void clear()

@@ -6,6 +6,6 @@ namespace Ex05_Othello.Logic
 {
     public class PlayerAllocator
     {
-
+        //TODO: ?
     }
 }

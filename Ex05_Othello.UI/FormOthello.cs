@@ -11,7 +11,9 @@ namespace Ex05_Othello.UI
 {
     public partial class FormOthello : Form
     {
-        private GameLogic m_GameLogic = new GameLogic();
+        private GameLogic m_GameLogic;
+        readonly Image r_RedImage = Properties.Resources.CoinRed;
+        readonly Image r_YellowImage = Properties.Resources.CoinYellow;
 
         public GameLogic GameLogic
         {
@@ -20,82 +22,143 @@ namespace Ex05_Othello.UI
                 return m_GameLogic;
            }
         }
-        public FormOthello(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
+        public FormOthello(GameLogic i_GameLogic, Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
+            m_GameLogic = i_GameLogic;
             InitializeComponent();
-            //initializeBoardSize(i_BoardSize);
             configureGameSettings(i_BoardSize, i_GameMode);
             createGameBoard();
-            updateBoardButtonsStatus();
+            Initialize();
+            adjustWindowSize(i_BoardSize);
         }
 
-        private void updateBoardButtonsStatus()
+        private void adjustWindowSize(Board.eBoardSize i_BoardSize)
         {
-            // 1. disable all buttons in flow and color it gray
-            disableAllBoardButtons();
+            int windowLength;
 
-            // 2. enable current player buttons options and color it green
-            enableAllLegalPlayerButtons(m_GameLogic.Turn);
+            flowLayoutPanelBoard.Top = 10;
+            flowLayoutPanelBoard.Left = 10;
+            windowLength = 10 * 2 + 40 * (int)i_BoardSize+((int)i_BoardSize-1)*5 + (int)i_BoardSize/2;
+            flowLayoutPanelBoard.Size = new Size(windowLength, windowLength);
+
         }
 
-        private void enableAllLegalPlayerButtons(Player.ePlayerColor i_Turn)
+        public void Initialize()
         {
-            List<Cell> currentPlayerOptionList;
+            updateBoardPictureBoxesStatus();
+            showPlayersByGameBoard();
+        }
 
-            currentPlayerOptionList = i_Turn == Player.ePlayerColor.White ? m_GameLogic.WhitePlayerOptions : m_GameLogic.BlackPlayerOptions;
-            foreach (Cell cell in currentPlayerOptionList)
+        private void showPlayersByGameBoard()
+        {
+            PictureBox cellAsPictureBox;
+            foreach(Cell cell in m_GameLogic.GameBoard.Matrix)
             {
-                enableRepresentingButton(cell);
+                cellAsPictureBox = convertCellToPictureBox(cell);
+                if(cell.Sign == (char)Player.ePlayerColor.Red)
+                {
+                    // assign red player image
+                    redPlayerPictureBoxStyle(cellAsPictureBox);
+                }
+                else if(cell.Sign == (char)Player.ePlayerColor.Yellow)
+                {
+                    // assign yellow player image
+                    yellowPlayerPictureBoxStyle(cellAsPictureBox);
+                }
             }
         }
 
-        private void enableRepresentingButton(Cell cell)
+        private void updateBoardPictureBoxesStatus()
         {
-            // this method recieve a cell and enableing the representing button.
-            Control button;
-            string buttonName;
+            // 1. disable all pictureBoxs in flow and color it gray
+            bool isStyleNeeded = true;
 
-            buttonName = string.Format("button{0}", cell.ToString()); // TODO :override cell to string..
-            button = flowLayoutPanelBoard.Controls[buttonName];
-            //1.enable the representing button.
-            button.Enabled = true;
-            //2.style the representing button.
-            availableButtonStyle(button as Button);
+            disableAllBoardPictureBoxes(isStyleNeeded);
+
+            // 2. enable current player pictureBoxs options and color it green
+            enableAllLegalPlayerPictureBoxs(m_GameLogic.Turn);
         }
 
-        private void disabledButtonStyle(Button i_ButtonToStyle)
+        internal void RestartGame()
         {
-            // this method is styling a disabled button
-            //TODO:
+            Initialize();
         }
 
-        private void availableButtonStyle(Button i_ButtonToStyle)
+        private void enableAllLegalPlayerPictureBoxs(Player.ePlayerColor i_Turn)
         {
-            // this method is styling an available button
-            //TODO:
+            List<Cell> currentPlayerOptionList;
 
+            currentPlayerOptionList = i_Turn == Player.ePlayerColor.Yellow ? m_GameLogic.YellowPlayerOptions : m_GameLogic.RedPlayerOptions;
+            foreach (Cell cell in currentPlayerOptionList)
+            {
+                enableRepresentingPictureBox(cell);
+            }
         }
 
-        private void whitePlayerButtonStyle(Button i_ButtonToStyle)
-        {
-            // this method is styling a button occupied by a white player
-            //TODO:
 
+
+        private void enableRepresentingPictureBox(Cell i_Cell)
+        {
+            // this method recieve a cell and enableing the representing pictureBox.
+            Control pictureBox;
+
+            pictureBox = convertCellToPictureBox(i_Cell);
+            //1.enable the representing pictureBox.
+            pictureBox.Enabled = true;
+            //2.style the representing pictureBox.
+            availablePictureBoxStyle(pictureBox as PictureBox);
         }
 
-        private void blackPlayerButtonStyle(Button i_ButtonToStyle)
+        private PictureBox convertCellToPictureBox(Cell i_Cell)
         {
-            // this method is styling a button occupied by a black player
-            //TODO:
+            Control control;
+            PictureBox pictureBox;
+            string pictureBoxName;
 
+            pictureBoxName = string.Format("pictureBox{0}", i_Cell.ToString());
+            control = flowLayoutPanelBoard.Controls[pictureBoxName];
+            pictureBox = control as PictureBox;
+
+            return pictureBox;
         }
 
-        private void disableAllBoardButtons()
+        private void disabledPictureBoxStyle(PictureBox i_PictureBoxToStyle)
+        {
+            // this method is styling a disabled pictureBox
+            i_PictureBoxToStyle.Image = null;
+            i_PictureBoxToStyle.BackColor = Color.Gray;
+        }
+
+        private void availablePictureBoxStyle(PictureBox i_PictureBoxToStyle)
+        {
+            // this method is styling an available pictureBox
+            i_PictureBoxToStyle.Image = null;
+            i_PictureBoxToStyle.BackColor = Color.Green;
+        }
+
+        private void yellowPlayerPictureBoxStyle(PictureBox i_PictureBoxToStyle)
+        {
+            // this method is styling a pictureBox occupied by a yellow player
+            i_PictureBoxToStyle.BackColor = Color.Gray;
+            i_PictureBoxToStyle.Image = r_YellowImage;
+        }
+
+        private void redPlayerPictureBoxStyle(PictureBox i_PictureBoxToStyle)
+        {
+            // this method is styling a pictureBox occupied by a red player
+            i_PictureBoxToStyle.BackColor = Color.Gray;
+            i_PictureBoxToStyle.Image = r_RedImage;
+        }
+
+        private void disableAllBoardPictureBoxes(bool i_IsStyleChangeNeeded)
         {
             foreach (Control control in flowLayoutPanelBoard.Controls)
             {
                 control.Enabled = false;
-                disabledButtonStyle(control as Button);
+                if(i_IsStyleChangeNeeded)
+                {
+                   disabledPictureBoxStyle(control as PictureBox);
+                }
             }
         }
 
@@ -110,47 +173,46 @@ namespace Ex05_Othello.UI
             
             for (int i = 0; i < (int)m_GameLogic.GameBoard.Size* (int)m_GameLogic.GameBoard.Size; i++)
             {
-                flowLayoutPanelBoard.Controls.Add(createGameBoardButton(i, (int)m_GameLogic.GameBoard.Size));
+                flowLayoutPanelBoard.Controls.Add(createGameBoardPictureBox(i, (int)m_GameLogic.GameBoard.Size));
             }
         }
 
-        Button createGameBoardButton(int i_ButtonNumber, int i_BoardSize)
+        PictureBox createGameBoardPictureBox(int i_PictureBoxNumber, int i_BoardSize)
         {
-            Button button = new Button();
-            string buttonIndex;
+            PictureBox pictureBox = new PictureBox();
+            string pictureBoxIndex;
 
-            buttonIndex = extractButtonIndex(i_ButtonNumber, i_BoardSize);
-            button.Name = string.Format("button{0}",buttonIndex);
-            button.Width = 40;
-            button.Height = 40;
-            button.Click += buttonCell_Click;
+            pictureBoxIndex = extractPictureBoxIndex(i_PictureBoxNumber, i_BoardSize);
+            pictureBox.Name = string.Format("pictureBox{0}",pictureBoxIndex);
+            pictureBox.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox.BackColor = Color.Gray;
+            pictureBox.Width = 40;
+            pictureBox.Height = 40;
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox.MouseDown += pictureBoxCell_MouseDown;
+            pictureBox.MouseUp += pictureBoxCell_MouseUp;
 
-            return button;
+            return pictureBox;
         }
 
-        private string extractButtonIndex(int i_ButtonNumber, int i_BoardSize)
+        private string extractPictureBoxIndex(int i_PictureBoxNumber, int i_BoardSize)
         {
-            string buttonIndex;
-            char buttonRow, buttonColumn;
+            string pictureBoxIndex;
+            char pictureBoxRow, pictureBoxColumn;
 
-            buttonRow = (char)((i_ButtonNumber / i_BoardSize) + '1');
-            buttonColumn = (char)((i_ButtonNumber % i_BoardSize) + 'A');
-            buttonIndex = string.Format("{0}{1}", buttonColumn, buttonRow);
+            pictureBoxRow = (char)((i_PictureBoxNumber / i_BoardSize) + '1');
+            pictureBoxColumn = (char)((i_PictureBoxNumber % i_BoardSize) + 'A');
+            pictureBoxIndex = string.Format("{0}{1}", pictureBoxColumn, pictureBoxRow);
 
-            return buttonIndex;
+            return pictureBoxIndex;
         }
 
-        private void buttonCell_Click(object sender, EventArgs e)
+
+        private void updateGameBoard()
         {
-            bool isGameOver;
-            
-            m_GameLogic.CellChosen((sender as Button).Name);
+            enableAllLegalPlayerPictureBoxs(m_GameLogic.Turn);
+            showPlayersByGameBoard();
             setFormTitle();
-            isGameOver = m_GameLogic.IsGameOver();
-            if (isGameOver)
-            {
-                Close();
-            }
         }
 
         private void setFormTitle()
@@ -163,14 +225,45 @@ namespace Ex05_Othello.UI
             Text = formTitle;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void pictureBoxCell_MouseUp(object sender, MouseEventArgs i_E)
         {
-            //delete - TODO
-        }
+            bool isPcPlaying, isGameOver, isStyleNeeded = true;
 
-        private void flowLayoutPanelBoard_Paint(object sender, PaintEventArgs e)
+            if(i_E.Button == MouseButtons.Left)
+            {
+                isPcPlaying = m_GameLogic.Mode == GameLogic.eGameMode.HumanVsPC && m_GameLogic.Turn == Player.ePlayerColor.Red;
+                if (isPcPlaying)
+                {
+                    disableAllBoardPictureBoxes(isStyleNeeded);
+                    m_GameLogic.PcPlay();
+                    System.Threading.Thread.Sleep(2000);
+                    updateGameBoard();
+                    isGameOver = m_GameLogic.IsGameOver();
+                    if (isGameOver)
+                    {
+                        m_GameLogic.UpdateWinnerOverallScore();
+                        Close();
+                    }
+                }
+
+            }
+        }
+        private void pictureBoxCell_MouseDown(object i_Sender, MouseEventArgs i_E)
         {
-            //delete - TODO
+            bool isGameOver;
+            int rowIndex, columnIndex;
+            if (i_E.Button == MouseButtons.Left)
+            {
+                m_GameLogic.ExtractCellIndex((i_Sender as PictureBox).Name, out rowIndex, out columnIndex);
+                m_GameLogic.CellChosen(rowIndex, columnIndex);
+                updateGameBoard();
+                isGameOver = m_GameLogic.IsGameOver();
+                if (isGameOver)
+                {
+                    m_GameLogic.UpdateWinnerOverallScore();
+                    Close();
+                }
+            }
         }
     }
 }

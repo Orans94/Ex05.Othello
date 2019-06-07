@@ -30,8 +30,8 @@ namespace Ex05_Othello.Logic
         private Board m_GameBoard;
         private eGameMode m_GameMode;
         private Player.ePlayerColor m_PlayerTurn;
-        private List<Cell> m_BlackPlayerOptions = new List<Cell>();
-        private List<Cell> m_WhitePlayerOptions = new List<Cell>();
+        private List<Cell> m_RedPlayerOptions = new List<Cell>();
+        private List<Cell> m_YellowPlayerOptions = new List<Cell>();
         private List<Player> m_Players = new List<Player>();
 
         public GameLogic(Board i_GameBoard, Player.ePlayerColor i_PlayerTurn)
@@ -41,10 +41,10 @@ namespace Ex05_Othello.Logic
             m_PlayerTurn = i_PlayerTurn;
         }
 
-        public void getPlayersCurrentRoundScores(out int i_WhitePlayerRoundScore, out int i_BlackPlayerRoundScore)
+        public void getPlayersCurrentRoundScores(out int i_YellowPlayerRoundScore, out int i_RedPlayerRoundScore)
         {
-            i_WhitePlayerRoundScore = m_Players[(int)Player.ePlayerColor.White].RoundScore;
-            i_BlackPlayerRoundScore = m_Players[(int)Player.ePlayerColor.Black].RoundScore;
+            i_YellowPlayerRoundScore = m_Players[(int)Player.ePlayerColor.Yellow].RoundScore;
+            i_RedPlayerRoundScore = m_Players[(int)Player.ePlayerColor.Red].RoundScore;
         }
 
         public void getCurrentRoundWinner(out string i_WinnerColor, out bool io_IsGameEndedInTie)
@@ -56,19 +56,19 @@ namespace Ex05_Othello.Logic
             }
             else
             {
-                i_WinnerColor = m_Players[(int)Player.ePlayerColor.White].RoundScore > m_Players[(int)Player.ePlayerColor.Black].RoundScore ? "White" : "Black";
+                i_WinnerColor = m_Players[(int)Player.ePlayerColor.Yellow].RoundScore > m_Players[(int)Player.ePlayerColor.Red].RoundScore ? "Yellow" : "Red";
             }
         }
 
         private bool isGameEndedInTie()
         {
-            return m_Players[(int)Player.ePlayerColor.White].RoundScore == m_Players[(int)Player.ePlayerColor.Black].RoundScore;
+            return m_Players[(int)Player.ePlayerColor.Yellow].RoundScore == m_Players[(int)Player.ePlayerColor.Red].RoundScore;
         }
 
-        public void getPlayersOverallScores(out int i_WhitePlayerOverallScore, out int i_BlackPlayerOverallScore)
+        public void getPlayersOverallScores(out int i_YellowPlayerOverallScore, out int i_RedPlayerOverallScore)
         {
-            i_WhitePlayerOverallScore = m_Players[(int)Player.ePlayerColor.White].OverallScore;
-            i_BlackPlayerOverallScore = m_Players[(int)Player.ePlayerColor.Black].OverallScore;
+            i_YellowPlayerOverallScore = m_Players[(int)Player.ePlayerColor.Yellow].OverallScore;
+            i_RedPlayerOverallScore = m_Players[(int)Player.ePlayerColor.Red].OverallScore;
         }
 
         public GameLogic()
@@ -97,17 +97,13 @@ namespace Ex05_Othello.Logic
             setGameParticipants();
         }
 
-        public void CellChosen(string i_CellName)
+        public void CellChosen(int i_CellRowIndex, int i_CellColumnIndex)
         {
             // this method is getting a name of a cell and acting like it was chosen(the cell is surely on option list)
             List<Cell> cellsToUpdate = new List<Cell>();
-            int rowIndex, columnIndex;
-            //check if current cell is in options?? or button that is not in options cant be clicked?
 
-            //1.extract the move from the name(explanation: take "E3" from "BUTTON E3")
-            extractCellIndex(i_CellName, out rowIndex, out columnIndex);
             //2.add all cells that should be updated to cellToUpdate list!(how?)
-            isPlayerMoveBlockingEnemy(rowIndex, columnIndex, ref cellsToUpdate);
+            isPlayerMoveBlockingEnemy(i_CellRowIndex, i_CellColumnIndex, ref cellsToUpdate);
             //3.update board
             m_GameBoard.UpdateBoard(cellsToUpdate, m_PlayerTurn);
             //4.update player options
@@ -128,7 +124,7 @@ namespace Ex05_Othello.Logic
             // this method checks if the game is over(if both of the players has no options to play).
             bool doesBothPlayersHasNoOptions;
 
-            doesBothPlayersHasNoOptions = isPlayerOptionEmpty(Player.ePlayerColor.Black) && isPlayerOptionEmpty(Player.ePlayerColor.White);
+            doesBothPlayersHasNoOptions = isPlayerOptionEmpty(Player.ePlayerColor.Red) && isPlayerOptionEmpty(Player.ePlayerColor.Yellow);
 
             return doesBothPlayersHasNoOptions;
         }
@@ -138,14 +134,14 @@ namespace Ex05_Othello.Logic
             // this method recieve a PlayerColor and check if his options list is empty.
             bool isOptionListEmpty;
 
-            if (i_PlayerColor == Player.ePlayerColor.Black)
+            if (i_PlayerColor == Player.ePlayerColor.Red)
             {
-                isOptionListEmpty = m_BlackPlayerOptions.Count == 0;
+                isOptionListEmpty = m_RedPlayerOptions.Count == 0;
             }
             else
             {
-                // if not black player - than its a white player.
-                isOptionListEmpty = m_WhitePlayerOptions.Count == 0;
+                // if not red player - than its a yellow player.
+                isOptionListEmpty = m_YellowPlayerOptions.Count == 0;
             }
 
             return isOptionListEmpty;
@@ -154,91 +150,100 @@ namespace Ex05_Othello.Logic
         public void RestartGame()
         {
             // this method restarts a game.
-            //1.update overall scores
-            updateWinnerOverallScore();
-            //2. initialize all
+            //1. initialize all
             Initialize();
         }
 
-        private void updateWinnerOverallScore()
+        public void UpdateWinnerOverallScore()
         {
             // this method checks who is the winner of the game and
-            int whitePlayerScore, blackPlayerScore;
+            int yellowPlayerScore, redPlayerScore;
 
-            whitePlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.White);
-            blackPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Black);
-            if (whitePlayerScore > blackPlayerScore)
+            yellowPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Yellow);
+            redPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Red);
+            if (yellowPlayerScore > redPlayerScore)
             {
-                m_Players[(int)Player.ePlayerColor.White].OverallScore++;
+                m_Players[(int)Player.ePlayerColor.Yellow].OverallScore++;
             }
-            else if (whitePlayerScore < blackPlayerScore)
+            else if (yellowPlayerScore < redPlayerScore)
             {
-                m_Players[(int)Player.ePlayerColor.Black].OverallScore++;
+                m_Players[(int)Player.ePlayerColor.Red].OverallScore++;
             }
             else
             {
-                m_Players[(int)Player.ePlayerColor.White].OverallScore++;
-                m_Players[(int)Player.ePlayerColor.Black].OverallScore++;
+                m_Players[(int)Player.ePlayerColor.Yellow].OverallScore++;
+                m_Players[(int)Player.ePlayerColor.Red].OverallScore++;
             }
         }
 
         private void updatePlayersScore()
         {
             // this method is updating the players scores.
-            int updatedWhitePlayerScore, updatedBlackPlayerScore;
+            int updatedYellowPlayerScore, updatedRedPlayerScore;
 
-            updatedWhitePlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.White);
-            updatedBlackPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Black);
-            m_Players[0].RoundScore = updatedWhitePlayerScore;
-            m_Players[1].RoundScore = updatedBlackPlayerScore;
+            updatedYellowPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Yellow);
+            updatedRedPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Red);
+            m_Players[0].RoundScore = updatedYellowPlayerScore;
+            m_Players[1].RoundScore = updatedRedPlayerScore;
         }
 
         private void manageTurnChanging()
         {
             // this method is managing the players turn changing
-            if (m_PlayerTurn == Player.ePlayerColor.Black && m_WhitePlayerOptions.Count > 0)
+            if (m_PlayerTurn == Player.ePlayerColor.Red && m_YellowPlayerOptions.Count > 0)
             {
-                m_PlayerTurn = Player.ePlayerColor.White;
+                m_PlayerTurn = Player.ePlayerColor.Yellow;
             }
-            else if (m_PlayerTurn == Player.ePlayerColor.White && m_BlackPlayerOptions.Count > 0)
+            else if (m_PlayerTurn == Player.ePlayerColor.Yellow && m_RedPlayerOptions.Count > 0)
             {
-                m_PlayerTurn = Player.ePlayerColor.Black;
+                m_PlayerTurn = Player.ePlayerColor.Red;
             }
-            else if ((m_PlayerTurn == Player.ePlayerColor.Black && m_WhitePlayerOptions.Count == 0)
-                 || (m_PlayerTurn == Player.ePlayerColor.White && m_BlackPlayerOptions.Count == 0))
+            else if(IsGameOver())
             {
-                // TODO:(?) UI.InformTurnHasBeenChanged(m_PlayerTurn);
-                // if you dont have options - should we put a message to the user?
+                m_PlayerTurn = m_PlayerTurn == Player.ePlayerColor.Red ? Player.ePlayerColor.Yellow : Player.ePlayerColor.Red;
             }
         }
 
-        private void extractCellIndex(string i_CellName, out int o_RowIndex, out int o_ColumnIndex)
+        public void ExtractCellIndex(string i_CellName, out int o_RowIndex, out int o_ColumnIndex)
         {
-            // this method get a button name and assign the row and column.
+            // this method get a pictureBox name and assign the row and column.
             string cellName;
 
-            cellName = i_CellName.Replace("button", string.Empty);
+            cellName = i_CellName.Replace("pictureBox", string.Empty);
             o_ColumnIndex = cellName[0] - 'A';
             o_RowIndex = cellName[1] - '1';
+        }
+
+        public void PcPlay()
+        {
+            int rowIndex, columnIndex;
+
+            do
+            {
+                (m_Players[(int)Player.ePlayerColor.Red] as PcPlayer).Play(m_GameBoard, out rowIndex, out columnIndex);
+                CellChosen(rowIndex, columnIndex);
+            }
+            //PcPlayer is always the red player
+            while (m_PlayerTurn == Player.ePlayerColor.Red);
         }
 
         private void setGameParticipants()
         {
             // this method is setting the player list according to the game mode.
-            Player whitePlayer = new HumanPlayer(Player.ePlayerColor.White);
-            Player blackPlayer;
+            Player yellowPlayer = new HumanPlayer(Player.ePlayerColor.Yellow);
+            Player redPlayer;
 
             if (m_GameMode == eGameMode.HumanVsHuman)
             {
-                blackPlayer = new HumanPlayer(Player.ePlayerColor.Black);
+                redPlayer = new HumanPlayer(Player.ePlayerColor.Red);
             }
             else
             {
-                blackPlayer = new PcPlayer(Player.ePlayerColor.Black);
+                redPlayer = new PcPlayer(Player.ePlayerColor.Red);
             }
 
-            m_Players.Add(whitePlayer);
-            m_Players.Add(blackPlayer);
+            m_Players.Add(yellowPlayer);
+            m_Players.Add(redPlayer);
         }
 
         public void Initialize()
@@ -247,7 +252,7 @@ namespace Ex05_Othello.Logic
             m_GameBoard.Initialize();
             initializePlayersOptions();
             initializePlayersCurrentRoundScores();
-            m_PlayerTurn = Player.ePlayerColor.White;
+            m_PlayerTurn = Player.ePlayerColor.Yellow;
         }
 
         private void initializePlayersCurrentRoundScores()
@@ -262,77 +267,56 @@ namespace Ex05_Othello.Logic
         private void initializePlayersOptions()
         {
             // this method is initializing the player options lists.
-            if (m_BlackPlayerOptions.Count != 0)
+            if (m_RedPlayerOptions.Count != 0)
             {
-                m_BlackPlayerOptions.Clear();
+                m_RedPlayerOptions.Clear();
             }
 
-            if (m_WhitePlayerOptions.Count != 0)
+            if (m_YellowPlayerOptions.Count != 0)
             {
-                m_WhitePlayerOptions.Clear();
+                m_YellowPlayerOptions.Clear();
             }
 
-            initializeBlackPlayerOptions();
-            initializeWhitePlayerOptions();
+            initializeRedPlayerOptions();
+            initializeYellowPlayerOptions();
         }
 
-        private void initializeBlackPlayerOptions()
+        private void initializeRedPlayerOptions()
         {
-            // this method is initializing the black player options list
+            // this method is initializing the red player options list
             Cell cellToBeAddedToOptions1;
             Cell cellToBeAddedToOptions2;
             Cell cellToBeAddedToOptions3;
             Cell cellToBeAddedToOptions4;
+            int difference = ((int)m_GameBoard.Size - (int)Board.eBoardSize.size6x6) / 2;
 
-            if (m_GameBoard.Size == Board.eBoardSize.size8x8)
-            {
-                cellToBeAddedToOptions1 = new Cell(2, 3);
-                cellToBeAddedToOptions2 = new Cell(3, 2);
-                cellToBeAddedToOptions3 = new Cell(5, 4);
-                cellToBeAddedToOptions4 = new Cell(4, 5);
-            }
-            else
-            {
-                cellToBeAddedToOptions1 = new Cell(1, 2);
-                cellToBeAddedToOptions2 = new Cell(2, 1);
-                cellToBeAddedToOptions3 = new Cell(4, 3);
-                cellToBeAddedToOptions4 = new Cell(3, 4);
-            }
-
-            m_BlackPlayerOptions.Add(cellToBeAddedToOptions1);
-            m_BlackPlayerOptions.Add(cellToBeAddedToOptions2);
-            m_BlackPlayerOptions.Add(cellToBeAddedToOptions3);
-            m_BlackPlayerOptions.Add(cellToBeAddedToOptions4);
+            cellToBeAddedToOptions1 = new Cell(1 + difference, 2 + difference);
+            cellToBeAddedToOptions2 = new Cell(2 + difference, 1 + difference);
+            cellToBeAddedToOptions3 = new Cell(4 + difference, 3 + difference);
+            cellToBeAddedToOptions4 = new Cell(3 + difference, 4 + difference);
+            m_RedPlayerOptions.Add(cellToBeAddedToOptions1);
+            m_RedPlayerOptions.Add(cellToBeAddedToOptions2);
+            m_RedPlayerOptions.Add(cellToBeAddedToOptions3);
+            m_RedPlayerOptions.Add(cellToBeAddedToOptions4);
         }
 
-        private void initializeWhitePlayerOptions()
+        private void initializeYellowPlayerOptions()
         {
-            // TODO: add initializing for 10x10 and 12x12
-            // this method is initializing the white player options list
+            // this method is initializing the yellow player options list
             Cell cellToBeAddedToOptions1;
             Cell cellToBeAddedToOptions2;
             Cell cellToBeAddedToOptions3;
             Cell cellToBeAddedToOptions4;
+            int difference = ((int)m_GameBoard.Size - (int)Board.eBoardSize.size6x6) / 2;
 
-            if (m_GameBoard.Size == Board.eBoardSize.size6x6)
-            {
-                cellToBeAddedToOptions1 = new Cell(1, 3);
-                cellToBeAddedToOptions2 = new Cell(2, 4);
-                cellToBeAddedToOptions3 = new Cell(3, 1);
-                cellToBeAddedToOptions4 = new Cell(4, 2);
-            }
-            else
-            {
-                cellToBeAddedToOptions1 = new Cell(2, 4);
-                cellToBeAddedToOptions2 = new Cell(3, 5);
-                cellToBeAddedToOptions3 = new Cell(4, 2);
-                cellToBeAddedToOptions4 = new Cell(5, 3);
-            }
-
-            m_WhitePlayerOptions.Add(cellToBeAddedToOptions1);
-            m_WhitePlayerOptions.Add(cellToBeAddedToOptions2);
-            m_WhitePlayerOptions.Add(cellToBeAddedToOptions3);
-            m_WhitePlayerOptions.Add(cellToBeAddedToOptions4);
+            cellToBeAddedToOptions1 = new Cell(1 + difference, 3 + difference);
+            cellToBeAddedToOptions2 = new Cell(2 + difference, 4 + difference);
+            cellToBeAddedToOptions3 = new Cell(3 + difference, 1 + difference);
+            cellToBeAddedToOptions4 = new Cell(4 + difference, 2 + difference);
+            m_YellowPlayerOptions.Add(cellToBeAddedToOptions1);
+            m_YellowPlayerOptions.Add(cellToBeAddedToOptions2);
+            m_YellowPlayerOptions.Add(cellToBeAddedToOptions3);
+            m_YellowPlayerOptions.Add(cellToBeAddedToOptions4);
         }
 
         public void updatePlayersOptions()
@@ -342,26 +326,26 @@ namespace Ex05_Othello.Logic
             Player.ePlayerColor lastPlayerTurn;
             bool isCellAnOption, shouldMethodAddCellsToUpdateList;
 
-            m_WhitePlayerOptions.Clear();
-            m_BlackPlayerOptions.Clear();
+            m_YellowPlayerOptions.Clear();
+            m_RedPlayerOptions.Clear();
             lastPlayerTurn = m_PlayerTurn;
             shouldMethodAddCellsToUpdateList = false;
             foreach (Cell cellIteator in m_GameBoard.Matrix)
             {
                 if (cellIteator.Sign == Cell.k_Empty)
                 {
-                    m_PlayerTurn = Player.ePlayerColor.White;
+                    m_PlayerTurn = Player.ePlayerColor.Yellow;
                     isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
-                        m_WhitePlayerOptions.Add(cellIteator);
+                        m_YellowPlayerOptions.Add(cellIteator);
                     }
 
-                    m_PlayerTurn = Player.ePlayerColor.Black;
+                    m_PlayerTurn = Player.ePlayerColor.Red;
                     isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
-                        m_BlackPlayerOptions.Add(cellIteator);
+                        m_RedPlayerOptions.Add(cellIteator);
                     }
                 }
             }
@@ -597,13 +581,13 @@ namespace Ex05_Othello.Logic
             return isCellEnemy;
         }
 
-        public List<Cell> WhitePlayerOptions
+        public List<Cell> YellowPlayerOptions
         {
-            // a propertie for m_WhitePlayerOptions
+            // a propertie for m_YellowPlayerOptions
             get
             {
 
-                return m_WhitePlayerOptions;
+                return m_YellowPlayerOptions;
             }
         }
 
@@ -647,13 +631,13 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        public List<Cell> BlackPlayerOptions
+        public List<Cell> RedPlayerOptions
         {
-            // a propertie for m_BlackPlayerOptions
+            // a propertie for m_RedPlayerOptions
             get
             {
 
-                return m_BlackPlayerOptions;
+                return m_RedPlayerOptions;
             }
         }
     }

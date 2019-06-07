@@ -8,15 +8,13 @@ namespace Ex05_Othello.Logic
     {
         public enum ePlayerColor
         {
-            Black = 1,
-            White = 0
+            Red = 1,
+            Yellow = 0
         }
         
         protected int m_CurrentRoundPlayerScore;
         protected int m_OverallPlayerScore = 0;
         protected ePlayerColor m_PlayerColor;
-
-        abstract public void Play(Board i_GameBoard, GameLogic.eGameMode i_GameMode, out int io_CurrentMoveRowIndex, out int io_CurrentMoveColumnIndex);
 
         public virtual ePlayerColor Color
         {

@@ -23,7 +23,19 @@ namespace Ex05_Othello.Logic
         {
             // default cell c'tor
         }
-        
+
+        public override string ToString()
+        {
+            string cellIndex;
+            char cellRow, cellColumn;
+
+            cellRow = (char)(m_Row + '1');
+            cellColumn = (char)(m_Column + 'A');
+            cellIndex = string.Format("{0}{1}", cellColumn, cellRow);
+
+            return cellIndex;
+        }
+
         public int Row
         {
             // a propertie for m_Row

@@ -9,41 +9,51 @@ namespace Ex05_Othello.UI
 {
     public class UIManager
     {
+        private GameLogic m_GameLogic = new GameLogic();
         public void Run()
         {
             DialogResult dialogResult;
+            FormOthello formOthello;
+
             visualStyles();
             FormGameSettings formGameSettings = new FormGameSettings();
             Application.Run(formGameSettings);
-            FormOthello formOthello = new FormOthello(formGameSettings.BoardSize, formGameSettings.GameMode);
             do
             {
+                formOthello = new FormOthello(m_GameLogic, formGameSettings.BoardSize, formGameSettings.GameMode);
+                formOthello.Initialize();
                 Application.Run(formOthello);
                 dialogResult = endOfRoundDialog(formOthello.GameLogic);
-                formOthello.GameLogic.RestartGame();
+                restartGame(formOthello);
             }
             while (dialogResult == DialogResult.Yes);
+        }
+
+        private void restartGame(FormOthello i_FormOthello)
+        {
+            // this method is doing a logic restart.
+            i_FormOthello.GameLogic.RestartGame();
         }
 
         private DialogResult endOfRoundDialog(GameLogic i_GameLogic)
         {
             bool isGameEndedInTie;
-            int whitePlayerRoundScore, blackPlayerRoundScore, whitePlayerOverallScore, blackPlayerOverallScore;
+            int yellowPlayerRoundScore, redPlayerRoundScore, yellowPlayerOverallScore, redPlayerOverallScore;
             string winnerColor, endOfRoundMessage;
             DialogResult dialogResult;
 
-            i_GameLogic.getPlayersCurrentRoundScores(out whitePlayerRoundScore, out blackPlayerRoundScore);
-            i_GameLogic.getPlayersOverallScores(out whitePlayerOverallScore, out blackPlayerOverallScore);
+            i_GameLogic.getPlayersCurrentRoundScores(out yellowPlayerRoundScore, out redPlayerRoundScore);
+            i_GameLogic.getPlayersOverallScores(out yellowPlayerOverallScore, out redPlayerOverallScore);
             i_GameLogic.getCurrentRoundWinner(out winnerColor, out isGameEndedInTie);
             if (isGameEndedInTie)
             {
-                endOfRoundMessage = string.Format("Its a DRAW !!({0}/{1})({2}/{3}){4}Would you like another round?", blackPlayerRoundScore, whitePlayerRoundScore,
-                   blackPlayerOverallScore, whitePlayerOverallScore, Environment.NewLine);
+                endOfRoundMessage = string.Format("Its a DRAW !!({0}/{1})({2}/{3}){4}Would you like another round?", redPlayerRoundScore, yellowPlayerRoundScore,
+                   redPlayerOverallScore, yellowPlayerOverallScore, Environment.NewLine);
             }
             else
             {
-                endOfRoundMessage = string.Format("{0} Won!!({1}/{2})({3}/{4}){5}Would you like another round?", winnerColor, blackPlayerRoundScore, whitePlayerRoundScore,
-                   blackPlayerOverallScore, whitePlayerOverallScore, Environment.NewLine);
+                endOfRoundMessage = string.Format("{0} Won!!({1}/{2})({3}/{4}){5}Would you like another round?", winnerColor, redPlayerRoundScore, yellowPlayerRoundScore,
+                   redPlayerOverallScore, yellowPlayerOverallScore, Environment.NewLine);
             }
             dialogResult = MessageBox.Show(endOfRoundMessage, "Othello", MessageBoxButtons.YesNo);
 

@@ -33,29 +33,31 @@
             // 
             // flowLayoutPanelBoard
             // 
-            this.flowLayoutPanelBoard.Location = new System.Drawing.Point(14, 15);
-            this.flowLayoutPanelBoard.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.flowLayoutPanelBoard.Location = new System.Drawing.Point(9, 10);
+            this.flowLayoutPanelBoard.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.flowLayoutPanelBoard.Name = "flowLayoutPanelBoard";
-            this.flowLayoutPanelBoard.Size = new System.Drawing.Size(465, 532);
+            this.flowLayoutPanelBoard.Size = new System.Drawing.Size(310, 346);
             this.flowLayoutPanelBoard.TabIndex = 0;
-            this.flowLayoutPanelBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanelBoard_Paint);
+            this.flowLayoutPanelBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCell_MouseUp);
             // 
             // FormOthello
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 562);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(329, 365);
             this.Controls.Add(this.flowLayoutPanelBoard);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.MaximizeBox = false;
             this.Name = "FormOthello";
-            this.Text = "FormOthello";
+            this.Text = "Othello - Yellow\'s Turn";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBoard;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBoard;
     }
 }
