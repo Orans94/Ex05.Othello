@@ -13,7 +13,7 @@ namespace Ex05_Othello.Logic
             AI.PCPlay(i_GameBoard, out io_CurrentMoveRowIndex, out io_CurrentMoveColumnIndex);
         }
 
-        public PcPlayer(GameUtilities.ePlayerColor i_PlayerColor)
+        public PcPlayer(Player.ePlayerColor i_PlayerColor)
         {
             m_PlayerColor = i_PlayerColor;
         }

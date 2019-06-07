@@ -13,6 +13,13 @@ namespace Ex05_Othello.UI
     {
         private GameLogic m_GameLogic = new GameLogic();
 
+        public GameLogic GameLogic
+        {
+            get
+            {
+                return m_GameLogic;
+           }
+        }
         public FormOthello(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
             InitializeComponent();

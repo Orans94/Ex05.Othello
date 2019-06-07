@@ -13,7 +13,7 @@ namespace Ex05_Othello.Logic
             o_CurrentMoveColumnIndex = 0;
         }
 
-        public HumanPlayer(GameUtilities.ePlayerColor i_PlayerColor)
+        public HumanPlayer(Player.ePlayerColor i_PlayerColor)
         {
             // Human player c'tor
             m_PlayerColor = i_PlayerColor;

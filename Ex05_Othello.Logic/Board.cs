@@ -79,20 +79,21 @@ namespace Ex05_Othello.Logic
 
         public void Initialize()
         {
+            //TODO: change from char to Player.ePlayerColor
             clear();
             if (Size == eBoardSize.size8x8)
             {
-                m_Board[3, 3].Sign = (char)GameUtilities.ePlayerColor.WhitePlayer;
-                m_Board[4, 3].Sign = (char)GameUtilities.ePlayerColor.BlackPlayer;
-                m_Board[4, 4].Sign = (char)GameUtilities.ePlayerColor.WhitePlayer;
-                m_Board[3, 4].Sign = (char)GameUtilities.ePlayerColor.BlackPlayer;
+                m_Board[3, 3].Sign = (char)Player.ePlayerColor.White;
+                m_Board[4, 3].Sign = (char)Player.ePlayerColor.Black;
+                m_Board[4, 4].Sign = (char)Player.ePlayerColor.White;
+                m_Board[3, 4].Sign = (char)Player.ePlayerColor.Black;
             }
             else if (Size == eBoardSize.size6x6)
             {
-                m_Board[2, 2].Sign = (char)GameUtilities.ePlayerColor.WhitePlayer;
-                m_Board[3, 2].Sign = (char)GameUtilities.ePlayerColor.BlackPlayer;
-                m_Board[3, 3].Sign = (char)GameUtilities.ePlayerColor.WhitePlayer;
-                m_Board[2, 3].Sign = (char)GameUtilities.ePlayerColor.BlackPlayer;
+                m_Board[2, 2].Sign = (char)Player.ePlayerColor.White;
+                m_Board[3, 2].Sign = (char)Player.ePlayerColor.Black;
+                m_Board[3, 3].Sign = (char)Player.ePlayerColor.White;
+                m_Board[2, 3].Sign = (char)Player.ePlayerColor.Black;
             }
         }
 
@@ -105,7 +106,7 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        public void UpdateBoard(List<Cell> i_CellsToUpdate, GameUtilities.ePlayerColor i_PlayingPlayer)
+        public void UpdateBoard(List<Cell> i_CellsToUpdate, Player.ePlayerColor i_PlayingPlayer)
         {
             // this method recieves a list of cells and a player color and put the correct sign in those cells.
             foreach (Cell currentCell in i_CellsToUpdate)

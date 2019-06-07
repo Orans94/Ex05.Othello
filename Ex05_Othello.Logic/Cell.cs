@@ -6,7 +6,7 @@ namespace Ex05_Othello.Logic
 {
     public class Cell
     {
-        public const char k_Empty = ' ';
+        public const char k_Empty = '2';
         private char m_Sign = k_Empty;
         private int m_Row;
         private int m_Column;

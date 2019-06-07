@@ -6,7 +6,7 @@ namespace Ex05_Othello.Logic
 {
     public class AI
     {
-        public static int Minimax(Board i_GameBoardState, int i_Depth, GameUtilities.ePlayerColor i_MaximizingPlayer, ref Cell io_Cell, ref List<KeyValuePair<int, List<Cell>>> i_ListOfKeyValue) 
+        public static int Minimax(Board i_GameBoardState, int i_Depth, Player.ePlayerColor i_MaximizingPlayer, ref Cell io_Cell, ref List<KeyValuePair<int, List<Cell>>> i_ListOfKeyValue) 
         {
             // this method return a List of pairs < heuristic score , list of cells that lead to this score >
             // using Minimax algorithm, it return that list of pair I described by ref 
@@ -24,7 +24,7 @@ namespace Ex05_Othello.Logic
             else
             {
                 gameMangaerAI.updatePlayersOptions();
-                if (i_MaximizingPlayer == GameUtilities.ePlayerColor.BlackPlayer) 
+                if (i_MaximizingPlayer == Player.ePlayerColor.Black) 
                 {
                     // this is PC's turn - Choose max value
                     maxEval = int.MinValue;
@@ -33,7 +33,7 @@ namespace Ex05_Othello.Logic
                         copiedBoard = gameMangaerAI.GameBoard.Clone();
                         gameMangaerAI.isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref playerOptionList);
                         copiedBoard.UpdateBoard(playerOptionList, i_MaximizingPlayer);
-                        eval = Minimax(copiedBoard, i_Depth - 1, GameUtilities.ePlayerColor.WhitePlayer, ref io_Cell, ref i_ListOfKeyValue);
+                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.White, ref io_Cell, ref i_ListOfKeyValue);
                         if (eval > maxEval)
                         {
                             playerMovesList.Add(io_Cell);
@@ -56,7 +56,7 @@ namespace Ex05_Othello.Logic
                         copiedBoard = gameMangaerAI.GameBoard.Clone();
                         gameMangaerAI.isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref playerOptionList);
                         copiedBoard.UpdateBoard(playerOptionList, i_MaximizingPlayer);
-                        eval = Minimax(copiedBoard, i_Depth - 1, GameUtilities.ePlayerColor.BlackPlayer, ref io_Cell, ref i_ListOfKeyValue);
+                        eval = Minimax(copiedBoard, i_Depth - 1, Player.ePlayerColor.Black, ref io_Cell, ref i_ListOfKeyValue);
                         if (eval < minEval)
                         {
                             playerMovesList.Add(io_Cell);
@@ -76,14 +76,14 @@ namespace Ex05_Othello.Logic
             // this method calculate the difference between the PC player score and the human score and return it
             int whiteCharsInBoard, blackCharsInBoard, difference;
 
-            whiteCharsInBoard = i_GameBoardState.CountSignAppearances((char)GameUtilities.ePlayerColor.WhitePlayer);
-            blackCharsInBoard = i_GameBoardState.CountSignAppearances((char)GameUtilities.ePlayerColor.BlackPlayer);
+            whiteCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.White);
+            blackCharsInBoard = i_GameBoardState.CountSignAppearances((char)Player.ePlayerColor.Black);
             difference = blackCharsInBoard - whiteCharsInBoard;
 
             return difference;
         }
 
-        private static bool isGameOver(Board i_GameBoardState, GameUtilities.ePlayerColor i_MaximizingPlayer)
+        private static bool isGameOver(Board i_GameBoardState, Player.ePlayerColor i_MaximizingPlayer)
         {
             // this method passing all cell in the list and check if their is an option for maximizingPlayer
             GameLogic tempGameManager = new GameLogic(i_GameBoardState, i_MaximizingPlayer);
@@ -113,7 +113,7 @@ namespace Ex05_Othello.Logic
             Cell chosenCell = new Cell();
             List<KeyValuePair<int, List<Cell>>> listOfScoreAndMoveList = new List<KeyValuePair<int, List<Cell>>>();
 
-            minmaxOutput = Minimax(i_GameBoard, 2, GameUtilities.ePlayerColor.BlackPlayer, ref chosenCell, ref listOfScoreAndMoveList);
+            minmaxOutput = Minimax(i_GameBoard, 2, Player.ePlayerColor.Black, ref chosenCell, ref listOfScoreAndMoveList);
 
             // sorting the list of heuristic scores and moves that lead them,
             // sorting this list by their score.
@@ -151,7 +151,7 @@ namespace Ex05_Othello.Logic
             return result;
         }
 
-        private static int heuristic(Board i_Board, GameUtilities.ePlayerColor i_playerTurn)
+        private static int heuristic(Board i_Board, Player.ePlayerColor i_playerTurn)
         {
             // heuristic method for Minimax algorithm
             int heuristicResult;
@@ -160,7 +160,7 @@ namespace Ex05_Othello.Logic
 
             heuristicResult = 0;
             differencePCHuman = differencePCScoreHumanScore(i_Board);
-            playerTurnSign = i_playerTurn == GameUtilities.ePlayerColor.BlackPlayer ? (char)GameUtilities.ePlayerColor.BlackPlayer : (char)GameUtilities.ePlayerColor.WhitePlayer;
+            playerTurnSign = i_playerTurn == Player.ePlayerColor.Black ? (char)Player.ePlayerColor.Black : (char)Player.ePlayerColor.White;
             heuristicResult += getCornersHeuristic(i_Board, playerTurnSign);
             return heuristicResult + differencePCHuman;
         }

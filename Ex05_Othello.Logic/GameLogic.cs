@@ -28,17 +28,33 @@ namespace Ex05_Othello.Logic
         }
 
         private Board m_GameBoard;
+        private eGameMode m_GameMode;
+        private Player.ePlayerColor m_PlayerTurn;
         private List<Cell> m_BlackPlayerOptions = new List<Cell>();
         private List<Cell> m_WhitePlayerOptions = new List<Cell>();
-        private GameUtilities.ePlayerColor m_PlayerTurn;
-        private eGameMode m_GameMode;
         private List<Player> m_Players = new List<Player>();
 
-        public GameLogic(Board i_GameBoard, GameUtilities.ePlayerColor i_PlayerTurn)
+        public GameLogic(Board i_GameBoard, Player.ePlayerColor i_PlayerTurn)
         {
             Board copiedBoard = i_GameBoard;
             m_GameBoard = copiedBoard;
             m_PlayerTurn = i_PlayerTurn;
+        }
+
+        public void getPlayersCurrentRoundScores(out int i_WhitePlayerRoundScore, out int i_BlackPlayerRoundScore)
+        {
+            i_WhitePlayerRoundScore = m_Players[0].RoundScore;
+            i_BlackPlayerRoundScore = m_Players[1].RoundScore;
+        }
+
+        public void getCurrentRoundWinner(out string i_WinnerColor)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void getPlayersOverallScores(out int i_WhitePlayerOverallScore, out int i_BlackPlayerOverallScore)
+        {
+            throw new NotImplementedException();
         }
 
         public GameLogic()
@@ -98,17 +114,17 @@ namespace Ex05_Othello.Logic
             // this method checks if the game is over(if both of the players has no options to play).
             bool doesBothPlayersHasNoOptions;
 
-            doesBothPlayersHasNoOptions = isPlayerOptionEmpty(GameUtilities.ePlayerColor.BlackPlayer) && isPlayerOptionEmpty(GameUtilities.ePlayerColor.WhitePlayer);
+            doesBothPlayersHasNoOptions = isPlayerOptionEmpty(Player.ePlayerColor.Black) && isPlayerOptionEmpty(Player.ePlayerColor.White);
 
             return doesBothPlayersHasNoOptions;
         }
 
-        private bool isPlayerOptionEmpty(GameUtilities.ePlayerColor i_PlayerColor)
+        private bool isPlayerOptionEmpty(Player.ePlayerColor i_PlayerColor)
         {
             // this method recieve a PlayerColor and check if his options list is empty.
             bool isOptionListEmpty;
 
-            if (i_PlayerColor == GameUtilities.ePlayerColor.BlackPlayer)
+            if (i_PlayerColor == Player.ePlayerColor.Black)
             {
                 isOptionListEmpty = m_BlackPlayerOptions.Count == 0;
             }
@@ -132,25 +148,25 @@ namespace Ex05_Othello.Logic
             // this method is updating the players scores.
             int updatedWhitePlayerScore, updatedBlackPlayerScore;
 
-            updatedWhitePlayerScore = m_GameBoard.CountSignAppearances((char)GameUtilities.ePlayerColor.WhitePlayer);
-            updatedBlackPlayerScore = m_GameBoard.CountSignAppearances((char)GameUtilities.ePlayerColor.BlackPlayer);
-            m_Players[0].Score = updatedWhitePlayerScore;
-            m_Players[1].Score = updatedBlackPlayerScore;
+            updatedWhitePlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.White);
+            updatedBlackPlayerScore = m_GameBoard.CountSignAppearances((char)Player.ePlayerColor.Black);
+            m_Players[0].RoundScore = updatedWhitePlayerScore;
+            m_Players[1].RoundScore = updatedBlackPlayerScore;
         }
 
         private void turnChangingManager()
         {
             // this method is managing the players turn changing
-            if (m_PlayerTurn == GameUtilities.ePlayerColor.BlackPlayer && m_WhitePlayerOptions.Count > 0)
+            if (m_PlayerTurn == Player.ePlayerColor.Black && m_WhitePlayerOptions.Count > 0)
             {
-                m_PlayerTurn = GameUtilities.ePlayerColor.WhitePlayer;
+                m_PlayerTurn = Player.ePlayerColor.White;
             }
-            else if (m_PlayerTurn == GameUtilities.ePlayerColor.WhitePlayer && m_BlackPlayerOptions.Count > 0)
+            else if (m_PlayerTurn == Player.ePlayerColor.White && m_BlackPlayerOptions.Count > 0)
             {
-                m_PlayerTurn = GameUtilities.ePlayerColor.BlackPlayer;
+                m_PlayerTurn = Player.ePlayerColor.Black;
             }
-            else if ((m_PlayerTurn == GameUtilities.ePlayerColor.BlackPlayer && m_WhitePlayerOptions.Count == 0)
-                 || (m_PlayerTurn == GameUtilities.ePlayerColor.WhitePlayer && m_BlackPlayerOptions.Count == 0))
+            else if ((m_PlayerTurn == Player.ePlayerColor.Black && m_WhitePlayerOptions.Count == 0)
+                 || (m_PlayerTurn == Player.ePlayerColor.White && m_BlackPlayerOptions.Count == 0))
             {
                 // TODO:(?) UI.InformTurnHasBeenChanged(m_PlayerTurn);
                 // if you dont have options - should we put a message to the user?
@@ -167,16 +183,16 @@ namespace Ex05_Othello.Logic
         private void setGameParticipants()
         {
             // this method is setting the player list according to the game mode.
-            Player whitePlayer = new HumanPlayer(GameUtilities.ePlayerColor.WhitePlayer);
+            Player whitePlayer = new HumanPlayer(Player.ePlayerColor.White);
             Player blackPlayer;
 
             if (m_GameMode == eGameMode.HumanVsHuman)
             {
-                blackPlayer = new HumanPlayer(GameUtilities.ePlayerColor.BlackPlayer);
+                blackPlayer = new HumanPlayer(Player.ePlayerColor.Black);
             }
             else
             {
-                blackPlayer = new PcPlayer(GameUtilities.ePlayerColor.BlackPlayer);
+                blackPlayer = new PcPlayer(Player.ePlayerColor.Black);
             }
 
             m_Players.Add(whitePlayer);
@@ -189,7 +205,7 @@ namespace Ex05_Othello.Logic
             m_GameBoard.Initialize();
             initializePlayersOptions();
             initializePlayersScores();
-            m_PlayerTurn = GameUtilities.ePlayerColor.WhitePlayer;
+            m_PlayerTurn = Player.ePlayerColor.White;
         }
 
         private void initializePlayersScores()
@@ -197,7 +213,7 @@ namespace Ex05_Othello.Logic
             // this method is initializing the players scores
             foreach(Player player in m_Players)
             {
-                player.Score = 2;
+                player.RoundScore = 2;
             }
         }
 
@@ -281,7 +297,7 @@ namespace Ex05_Othello.Logic
         {
             // this method is updating the Lists of the players options
             List<Cell> cellList = new List<Cell>();
-            GameUtilities.ePlayerColor lastPlayerTurn;
+            Player.ePlayerColor lastPlayerTurn;
             bool isCellAnOption, shouldMethodAddCellsToUpdateList;
 
             m_WhitePlayerOptions.Clear();
@@ -292,14 +308,14 @@ namespace Ex05_Othello.Logic
             {
                 if (cellIteator.Sign == Cell.k_Empty)
                 {
-                    m_PlayerTurn = GameUtilities.ePlayerColor.WhitePlayer;
+                    m_PlayerTurn = Player.ePlayerColor.White;
                     isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
                         m_WhitePlayerOptions.Add(cellIteator);
                     }
 
-                    m_PlayerTurn = GameUtilities.ePlayerColor.BlackPlayer;
+                    m_PlayerTurn = Player.ePlayerColor.Black;
                     isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
@@ -529,7 +545,7 @@ namespace Ex05_Othello.Logic
             return isBlockingLine;
         }
 
-        private bool isCellAnEnemy(Cell i_CellIterator, GameUtilities.ePlayerColor i_CurrentPlayerTurn)
+        private bool isCellAnEnemy(Cell i_CellIterator, Player.ePlayerColor i_CurrentPlayerTurn)
         {
             // this method return true if the sign of the input cell is different from i_CurrentPlayerTurn
             bool isCellEnemy;
@@ -549,7 +565,7 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        public GameUtilities.ePlayerColor Turn
+        public Player.ePlayerColor Turn
         {
             // a propertie for m_PlayerTurn
             get

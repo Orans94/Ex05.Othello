@@ -6,17 +6,24 @@ namespace Ex05_Othello.Logic
 {
     abstract public class Player
     {
-        protected int m_PlayerScore;
-        protected GameUtilities.ePlayerColor m_PlayerColor;
+        public enum ePlayerColor
+        {
+            Black = 1,
+            White = 0
+        }
+        
+        protected int m_CurrentRoundPlayerScore;
+        protected int m_OverallPlayerScore = 0;
+        protected ePlayerColor m_PlayerColor;
 
         abstract public void Play(Board i_GameBoard, GameLogic.eGameMode i_GameMode, out int io_CurrentMoveRowIndex, out int io_CurrentMoveColumnIndex);
 
-        public virtual GameUtilities.ePlayerColor Color
+        public virtual ePlayerColor Color
         {
-            // a propertie for m_PlayerScore
+            // a propertie for m_CurrentRoundPlayerScore
             get
             {
-
+                
                 return m_PlayerColor;
             }
 
@@ -26,18 +33,33 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        public virtual int Score
+        public virtual int OverallScore
+        {
+            // a propertie for m_OverallPlayerScore
+            get
+            {
+
+                return m_OverallPlayerScore;
+            }
+
+            set
+            {
+                m_OverallPlayerScore = value;
+            }
+        }
+
+        public virtual int RoundScore
         {
             // a propertie for m_PlayerScore
             get
             {
 
-                return m_PlayerScore;
+                return m_CurrentRoundPlayerScore;
             }
 
             set
             {
-                m_PlayerScore = value;
+                m_CurrentRoundPlayerScore = value;
             }
         }
     }
