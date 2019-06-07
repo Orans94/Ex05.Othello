@@ -33,17 +33,20 @@
             // 
             // flowLayoutPanelBoard
             // 
-            this.flowLayoutPanelBoard.Location = new System.Drawing.Point(12, 12);
+            this.flowLayoutPanelBoard.Location = new System.Drawing.Point(14, 15);
+            this.flowLayoutPanelBoard.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.flowLayoutPanelBoard.Name = "flowLayoutPanelBoard";
-            this.flowLayoutPanelBoard.Size = new System.Drawing.Size(413, 426);
+            this.flowLayoutPanelBoard.Size = new System.Drawing.Size(465, 532);
             this.flowLayoutPanelBoard.TabIndex = 0;
+            this.flowLayoutPanelBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanelBoard_Paint);
             // 
             // FormOthello
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(438, 450);
+            this.ClientSize = new System.Drawing.Size(493, 562);
             this.Controls.Add(this.flowLayoutPanelBoard);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormOthello";
             this.Text = "FormOthello";
             this.ResumeLayout(false);

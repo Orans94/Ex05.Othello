@@ -15,7 +15,14 @@ namespace Ex05_Othello.UI
             FormGameSettings formGameSettings = new FormGameSettings();
             Application.Run(formGameSettings);
             FormOthello formOthello = new FormOthello(formGameSettings.BoardSize, formGameSettings.GameMode);
-            Application.Run(formOthello);
+            while (true)
+            {
+                //TODO: show end of round form(?) if user choose yes - restarts game if no - exit.
+                Application.Run(formOthello);
+                
+            }
+            //FormEndOfRound formEndOfRound = new FormEndOfRound();
+           // Application.Run(formEndOfRound);
         }
 
         private static void visualStyles()

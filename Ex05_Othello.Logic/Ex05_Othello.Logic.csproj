@@ -43,6 +43,7 @@
     <Compile Include="HumanPlayer.cs" />
     <Compile Include="PcPlayer.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerAllocator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,7 +10,7 @@ namespace Ex05_Othello.Logic
         {
             // this method return a List of pairs < heuristic score , list of cells that lead to this score >
             // using Minimax algorithm, it return that list of pair I described by ref 
-            GameManager gameMangaerAI = new GameManager(i_GameBoardState, i_MaximizingPlayer);
+            GameLogic gameMangaerAI = new GameLogic(i_GameBoardState, i_MaximizingPlayer);
             List<Cell> playerOptionList = new List<Cell>();
             List<Cell> playerMovesList = new List<Cell>();
             KeyValuePair<int, List<Cell>> scoreAndCellsListPair;
@@ -86,7 +86,7 @@ namespace Ex05_Othello.Logic
         private static bool isGameOver(Board i_GameBoardState, GameUtilities.ePlayerColor i_MaximizingPlayer)
         {
             // this method passing all cell in the list and check if their is an option for maximizingPlayer
-            GameManager tempGameManager = new GameManager(i_GameBoardState, i_MaximizingPlayer);
+            GameLogic tempGameManager = new GameLogic(i_GameBoardState, i_MaximizingPlayer);
             List<Cell> cellLists = new List<Cell>();
             bool addToCellsList, isCellAnOption, currentGameNotOver;
 

@@ -24,7 +24,7 @@ namespace Ex05_Othello.UI
         private void configureGameSettings(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
             m_GameLogic.configureGameSettings(i_BoardSize, i_GameMode);
-            m_GameLogic.initialize();
+            m_GameLogic.Initialize();
         }
 
         private void createGameBoard()
@@ -49,13 +49,24 @@ namespace Ex05_Othello.UI
 
         private void buttonCell_Click(object sender, EventArgs e)
         {
-            //m_GameLogic.;
-            MessageBox.Show((sender as Button).Text);
+            bool isGameOver;
+
+            m_GameLogic.CellChosen((sender as Button).Name);
+            isGameOver = m_GameLogic.IsGameOver();
+            if(isGameOver)
+            {
+                Close();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            //delete
+        }
+
+        private void flowLayoutPanelBoard_Paint(object sender, PaintEventArgs e)
+        {
+            //delete
         }
     }
 }
