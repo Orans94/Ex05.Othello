@@ -226,7 +226,8 @@ namespace Ex05_Othello.UI
             if (i_E.Button == MouseButtons.Left)
             {
                 m_GameLogic.ExtractCellIndex((i_Sender as PictureBox).Name, out rowIndex, out columnIndex);
-                m_GameLogic.CellChosen(rowIndex, columnIndex);
+                m_GameLogic.PlayMove(rowIndex, columnIndex);
+                manageTurnChanging();
                 updateGameBoard();
                 isGameOver = manageGameOver();
                 if (!isGameOver)
@@ -248,6 +249,28 @@ namespace Ex05_Othello.UI
                 updateGameBoard();
                 manageGameOver();
             }
+        }
+
+        private void manageTurnChanging()
+        {
+            bool isTurnChanged;
+
+            isTurnChanged = m_GameLogic.ManageTurnChanging();
+            if (!isTurnChanged)
+            {
+                showTurnHasntBeenChangedDialog();
+            }
+        }
+
+        private void showTurnHasntBeenChangedDialog()
+        {
+            Player.eColor currentPlayerTurn, outOfOptionPlayer;
+            string messageBox;
+
+            currentPlayerTurn = m_GameLogic.Turn;
+            outOfOptionPlayer = currentPlayerTurn == Player.eColor.Red ? Player.eColor.Yellow : Player.eColor.Red;
+            messageBox = string.Format("{0} player you have no options!{1}Its {2}'s turn again!", outOfOptionPlayer.ToString(), Environment.NewLine, currentPlayerTurn.ToString());
+            MessageBox.Show(messageBox, "Turn notice!");
         }
 
         private bool manageGameOver()

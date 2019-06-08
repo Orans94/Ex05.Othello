@@ -97,26 +97,22 @@ namespace Ex05_Othello.Logic
             setGameParticipants();
         }
 
-        public void CellChosen(int i_CellRowIndex, int i_CellColumnIndex)
+        public void PlayMove(int i_CellRowIndex, int i_CellColumnIndex)
         {
-            // this method is getting a name of a cell and acting like it was chosen(the cell is surely on option list)
+            // this method is getting index of a cell and and play according to the index(the cell is surely on option list)
             List<Cell> cellsToUpdate = new List<Cell>();
 
-            //2.add all cells that should be updated to cellToUpdate list!(how?)
+            // 1. add all cells that should be updated to cellToUpdate list!(how?)
             isPlayerMoveBlockingEnemy(i_CellRowIndex, i_CellColumnIndex, ref cellsToUpdate);
-            //3.update board
-            m_GameBoard.UpdateBoard(cellsToUpdate, m_PlayerTurn);
-            //4.update player options
-            updatePlayersOptions();
-            //5.update player scores
-            updatePlayersScore();
-            //6.turn changing
-            manageTurnChanging();
-            //7.check if game over
 
-            //  7.1 if game over - UI should know and print message of winner etc...
-            //  7.2 UI should also ask if user want another game...
-            //      7.2.1 if user want another game- restart game.
+            // 2. update board
+            m_GameBoard.UpdateBoard(cellsToUpdate, m_PlayerTurn);
+
+            // 3. update player options
+            updatePlayersOptions();
+
+            // 4. update player scores
+            updatePlayersScore();
         }
 
         public bool IsGameOver()
@@ -187,9 +183,11 @@ namespace Ex05_Othello.Logic
             m_Players[playerIndex(Player.eColor.Red)].RoundScore = updatedRedPlayerScore;
         }
 
-        private void manageTurnChanging()
+        public bool ManageTurnChanging()
         {
-            // this method is managing the players turn changing
+            // this method is managing the players turn changing and return true if the turn has been changed.
+            bool isTurnChanged = true; ;
+
             if (m_PlayerTurn == Player.eColor.Red && m_YellowPlayerOptions.Count > 0)
             {
                 m_PlayerTurn = Player.eColor.Yellow;
@@ -202,6 +200,13 @@ namespace Ex05_Othello.Logic
             {
                 m_PlayerTurn = m_PlayerTurn == Player.eColor.Red ? Player.eColor.Yellow : Player.eColor.Red;
             }
+            else if ((m_PlayerTurn == Player.eColor.Red && m_YellowPlayerOptions.Count == 0)
+                 || (m_PlayerTurn == Player.eColor.Yellow && m_RedPlayerOptions.Count == 0))
+            {
+                isTurnChanged = false;
+            }
+
+            return isTurnChanged;
         }
 
         public void ExtractCellIndex(string i_CellName, out int o_RowIndex, out int o_ColumnIndex)
@@ -221,7 +226,8 @@ namespace Ex05_Othello.Logic
             do
             {
                 (m_Players[playerIndex(Player.eColor.Red)] as PcPlayer).Play(m_GameBoard, out rowIndex, out columnIndex);
-                CellChosen(rowIndex, columnIndex);
+                PlayMove(rowIndex, columnIndex);
+                ManageTurnChanging();
             }
             //PcPlayer is always the red player
             while (m_PlayerTurn == Player.eColor.Red);

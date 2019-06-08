@@ -10,30 +10,53 @@ namespace Ex05_Othello.UI
     public class UIManager
     {
         private GameLogic m_GameLogic = new GameLogic();
+
         public void Run()
         {
+            FormGameSettings formGameSettings;
             DialogResult dialogResult;
-            FormOthello formOthello;
 
             visualStyles();
-            FormGameSettings formGameSettings = new FormGameSettings();
-            Application.Run(formGameSettings);
+            formGameSettings = startFormGameSettings();
             do
             {
-                formOthello = new FormOthello(m_GameLogic, formGameSettings.BoardSize, formGameSettings.GameMode);
-                formOthello.Initialize();
-                Application.Run(formOthello);
-                m_GameLogic.UpdateWinnerOverallScore();
-                dialogResult = endOfRoundDialog(formOthello.GameLogic);
-                restartGame(formOthello);
+                startFormOthello(formGameSettings);
+                updateWinnerOverallScore();
+                dialogResult = endOfRoundDialog(m_GameLogic);
+                restartGame();
             }
             while (dialogResult == DialogResult.Yes);
         }
 
-        private void restartGame(FormOthello i_FormOthello)
+        private static FormGameSettings startFormGameSettings()
+        {
+            // this method excute form game settings and return the form.
+            FormGameSettings formGameSettings = new FormGameSettings();
+            Application.Run(formGameSettings);
+
+            return formGameSettings;
+        }
+
+        private void updateWinnerOverallScore()
+        {
+            // this method updates the winner overall score
+            m_GameLogic.UpdateWinnerOverallScore();
+        }
+
+        private void startFormOthello(FormGameSettings formGameSettings)
+        {
+            // this method execute form othello
+            FormOthello formOthello;
+
+            formOthello = new FormOthello(m_GameLogic, formGameSettings.BoardSize, formGameSettings.GameMode);
+            formOthello.Initialize();
+            Application.Run(formOthello);
+        }
+
+        private void restartGame()
         {
             // this method is doing a logic restart.
-            i_FormOthello.GameLogic.RestartGame();
+            m_GameLogic.RestartGame();
         }
 
         private DialogResult endOfRoundDialog(GameLogic i_GameLogic)
