@@ -13,6 +13,7 @@ namespace Ex05_Othello.UI
     {
         private Board.eBoardSize m_BoardSize = Board.eBoardSize.size6x6;
         private GameLogic.eGameMode m_GameMode;
+        private bool m_FormClosedByUser = true;
 
         public FormGameSettings()
         {
@@ -67,15 +68,25 @@ namespace Ex05_Othello.UI
             }
         }
 
+        public bool XButtonWasPressed
+        {
+            get
+            {
+                return m_FormClosedByUser;
+            }
+        }
+
         private void buttonPlayHumanVsPC_Click(object sender, EventArgs e)
         {
             m_GameMode = GameLogic.eGameMode.HumanVsPC;
+            m_FormClosedByUser = false;
             Close();
         }
 
         private void buttonPlayHumanVsHuman_Click(object sender, EventArgs e)
         {
             m_GameMode = GameLogic.eGameMode.HumanVsHuman;
+            m_FormClosedByUser = false;
             Close();
         }
     }

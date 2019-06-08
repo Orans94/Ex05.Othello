@@ -245,9 +245,21 @@ namespace Ex05_Othello.UI
             if (isPcPlaying)
             {
                 disableAllBoardPictureBoxes();
-                m_GameLogic.PcPlay();
+                PcPlay();
                 updateGameBoard();
                 manageGameOver();
+            }
+        }
+
+        private void PcPlay()
+        {
+
+            m_GameLogic.PcPlay();
+
+            while (m_GameLogic.Turn == Player.eColor.Red)
+            {
+                showTurnHasntBeenChangedDialog();
+                m_GameLogic.PcPlay();
             }
         }
 
@@ -265,12 +277,14 @@ namespace Ex05_Othello.UI
         private void showTurnHasntBeenChangedDialog()
         {
             Player.eColor currentPlayerTurn, outOfOptionPlayer;
-            string messageBox;
+            string messageBoxText, messageBoxTitle;
 
             currentPlayerTurn = m_GameLogic.Turn;
             outOfOptionPlayer = currentPlayerTurn == Player.eColor.Red ? Player.eColor.Yellow : Player.eColor.Red;
-            messageBox = string.Format("{0} player you have no options!{1}Its {2}'s turn again!", outOfOptionPlayer.ToString(), Environment.NewLine, currentPlayerTurn.ToString());
-            MessageBox.Show(messageBox, "Turn notice!");
+            messageBoxText = string.Format("{0} player you have no options!{1}Its {2}'s turn again!", outOfOptionPlayer.ToString(), Environment.NewLine, currentPlayerTurn.ToString());
+            messageBoxTitle = "Turn notice!";
+            updateGameBoard();
+            MessageBox.Show(messageBoxText, messageBoxTitle);
         }
 
         private bool manageGameOver()

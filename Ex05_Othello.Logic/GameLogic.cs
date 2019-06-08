@@ -222,15 +222,10 @@ namespace Ex05_Othello.Logic
         public void PcPlay()
         {
             int rowIndex, columnIndex;
-            
-            do
-            {
-                (m_Players[playerIndex(Player.eColor.Red)] as PcPlayer).Play(m_GameBoard, out rowIndex, out columnIndex);
-                PlayMove(rowIndex, columnIndex);
-                ManageTurnChanging();
-            }
-            //PcPlayer is always the red player
-            while (m_PlayerTurn == Player.eColor.Red);
+
+            (m_Players[playerIndex(Player.eColor.Red)] as PcPlayer).Play(m_GameBoard, out rowIndex, out columnIndex);
+            PlayMove(rowIndex, columnIndex);
+            ManageTurnChanging();
         }
 
         private int playerIndex(Player.eColor i_PlayerColor)

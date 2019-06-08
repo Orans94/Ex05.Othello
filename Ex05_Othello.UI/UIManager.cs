@@ -18,14 +18,17 @@ namespace Ex05_Othello.UI
 
             visualStyles();
             formGameSettings = startFormGameSettings();
-            do
+            if (!formGameSettings.XButtonWasPressed)
             {
-                startFormOthello(formGameSettings);
-                updateWinnerOverallScore();
-                dialogResult = endOfRoundDialog(m_GameLogic);
-                restartGame();
+                do
+                {
+                    startFormOthello(formGameSettings);
+                    updateWinnerOverallScore();
+                    dialogResult = endOfRoundDialog(m_GameLogic);
+                    restartGame();
+                }
+                while (dialogResult == DialogResult.Yes);
             }
-            while (dialogResult == DialogResult.Yes);
         }
 
         private static FormGameSettings startFormGameSettings()
