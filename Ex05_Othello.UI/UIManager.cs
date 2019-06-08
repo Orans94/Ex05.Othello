@@ -15,7 +15,7 @@ namespace Ex05_Othello.UI
             // this method maintains the main loop for the game
             FormGameSettings formGameSettings;
             DialogResult dialogResult;
-
+            
             visualStyles();
             formGameSettings = startFormGameSettings();
             if (!formGameSettings.XButtonWasPressed)

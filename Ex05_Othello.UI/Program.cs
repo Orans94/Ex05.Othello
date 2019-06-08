@@ -6,9 +6,10 @@ namespace Ex05_Othello.UI
 {
     public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        // This is Othello game by Tomer Shaked and Oran Sherf, 2nd year students in MTA.
+        // Please notice,
+        // When the game mode is set to Human Vs PC - The PC player will be the RED player!
+        // Enjoy!
         [STAThread]
         public static void Main()
         {
