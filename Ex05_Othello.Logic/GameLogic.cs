@@ -12,21 +12,6 @@ namespace Ex05_Othello.Logic
             HumanVsPC = 2
         }
 
-        public enum eGameDecision
-        {
-            Rematch = 1,
-            Exit = 2
-        }
-
-        public enum eDirection
-        {
-            Up = -1,
-            Down = 1,
-            Left = -1,
-            Right = 1,
-            NoDirection = 0
-        }
-
         private Board m_GameBoard;
         private eGameMode m_GameMode;
         private Player.eColor m_PlayerTurn;
@@ -370,40 +355,40 @@ namespace Ex05_Othello.Logic
             // its also updates the list of cells to update.
             bool isVerticalBlocking, isHorizontalBlocking, isDiagonalOneBlocking, isDiagonalTwoBlocking, isMoveBlockingEnemy;
 
-            isVerticalBlocking = isVerticallyBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Up, (int)eDirection.NoDirection, i_AddCellsToList);
-            isVerticalBlocking = isVerticallyBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Down, (int)eDirection.NoDirection, i_AddCellsToList) || isVerticalBlocking;
-            isHorizontalBlocking = isHorizontallyBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.NoDirection, (int)eDirection.Left, i_AddCellsToList);
-            isHorizontalBlocking = isHorizontallyBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.NoDirection, (int)eDirection.Right, i_AddCellsToList) || isHorizontalBlocking;
-            isDiagonalOneBlocking = isDiagonallyOneBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Up, (int)eDirection.Right, i_AddCellsToList);
-            isDiagonalOneBlocking = isDiagonallyOneBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Down, (int)eDirection.Left, i_AddCellsToList) || isDiagonalOneBlocking;
-            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Up, (int)eDirection.Left, i_AddCellsToList);
-            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, ref io_CellsToUpdate, (int)eDirection.Down, (int)eDirection.Right, i_AddCellsToList) || isDiagonalTwoBlocking;
+            isVerticalBlocking = isVerticallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.NoDirection), i_AddCellsToList);
+            isVerticalBlocking = isVerticallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.NoDirection), i_AddCellsToList) || isVerticalBlocking;
+            isHorizontalBlocking = isHorizontallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Left), i_AddCellsToList);
+            isHorizontalBlocking = isHorizontallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Right), i_AddCellsToList) || isHorizontalBlocking;
+            isDiagonalOneBlocking = isDiagonallyOneBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Right), i_AddCellsToList);
+            isDiagonalOneBlocking = isDiagonallyOneBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Left), i_AddCellsToList) || isDiagonalOneBlocking;
+            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Left), i_AddCellsToList);
+            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Right), i_AddCellsToList) || isDiagonalTwoBlocking;
             isMoveBlockingEnemy = isVerticalBlocking || isHorizontalBlocking || isDiagonalOneBlocking || isDiagonalTwoBlocking;
 
             return isMoveBlockingEnemy;
         }
 
-        private bool isHorizontallyBlocking(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, ref List<Cell> io_CellsToUpdate, int i_VerticalDirection, int i_HorizontalDirection, bool i_AddCellsToList)
+        private bool isHorizontallyBlocking(Cell i_CellToCheck, ref List<Cell> io_CellsToUpdate, Direction i_Direction, bool i_AddCellsToList)
         {
             // this method return true if a blocking sequence has been found in horizontal direction.
             Cell cellIterator = null;
             bool isBlockFound;
 
-            isBlockFound = isBlockingLine(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, i_VerticalDirection, i_HorizontalDirection, out cellIterator);
+            isBlockFound = isBlockingLine(i_CellToCheck, i_Direction, out cellIterator);
             if (isBlockFound && i_AddCellsToList == true)
             {
-                if (i_HorizontalDirection == (int)eDirection.Left)
+                if (i_Direction.Horizontal == (int)Direction.eDirection.Left)
                 {
-                    for (int column = i_PlayerMoveColumnIndex; column > cellIterator.Column; column--)
+                    for (int column = i_CellToCheck.Column; column > cellIterator.Column; column--)
                     {
-                        io_CellsToUpdate.Add(m_GameBoard.Matrix[i_PlayerMoveRowIndex, column]);
+                        io_CellsToUpdate.Add(m_GameBoard.Matrix[i_CellToCheck.Row, column]);
                     }
                 }
                 else
                 {
-                    for (int column = i_PlayerMoveColumnIndex; column < cellIterator.Column; column++)
+                    for (int column = i_CellToCheck.Column; column < cellIterator.Column; column++)
                     {
-                        io_CellsToUpdate.Add(m_GameBoard.Matrix[i_PlayerMoveRowIndex, column]);
+                        io_CellsToUpdate.Add(m_GameBoard.Matrix[i_CellToCheck.Row, column]);
                     }
                 }
             }
@@ -411,7 +396,7 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isDiagonallyTwoBlocking(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, ref List<Cell> io_CellsToUpdate, int i_VerticalDirection, int i_HorizontalDirection, bool i_AddCellsToList)
+        private bool isDiagonallyTwoBlocking(Cell i_CellToCheck, ref List<Cell> io_CellsToUpdate, Direction i_Direction, bool i_AddCellsToList)
         {
             // this method return true if a blocking sequence has been found in diagonal direction.
             // **(Diagonal two is going down by Y).
@@ -419,26 +404,26 @@ namespace Ex05_Othello.Logic
             bool isBlockFound;
             int row;
 
-            isBlockFound = isBlockingLine(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, i_VerticalDirection, i_HorizontalDirection, out cellIterator);
+            isBlockFound = isBlockingLine(i_CellToCheck, i_Direction, out cellIterator);
             if (isBlockFound && i_AddCellsToList == true)
             {
-                if (i_HorizontalDirection == (int)eDirection.Left && i_VerticalDirection == (int)eDirection.Up)
+                if (i_Direction.Horizontal == (int)Direction.eDirection.Left && i_Direction.Vertical == (int)Direction.eDirection.Up)
                 {
-                    row = i_PlayerMoveRowIndex;
-                    for (int column = i_PlayerMoveColumnIndex; column > cellIterator.Column; column--)
+                    row = i_CellToCheck.Row;
+                    for (int column = i_CellToCheck.Column; column > cellIterator.Column; column--)
                     {
                         io_CellsToUpdate.Add(m_GameBoard.Matrix[row, column]);
-                        row += (int)eDirection.Up;
+                        row += (int)Direction.eDirection.Up;
                     }
                 }
                 else
                 {
                     // elsewise we are going RIGHT and DOWN
-                    row = i_PlayerMoveRowIndex;
-                    for (int i = i_PlayerMoveColumnIndex; i < cellIterator.Column; i++)
+                    row = i_CellToCheck.Row;
+                    for (int i = i_CellToCheck.Column; i < cellIterator.Column; i++)
                     {
                         io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i]);
-                        row += (int)eDirection.Down;
+                        row += (int)Direction.eDirection.Down;
                     }
                 }
             }
@@ -446,7 +431,7 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isDiagonallyOneBlocking(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, ref List<Cell> io_CellsToUpdate, int i_VerticalDirection, int i_HorizontalDirection, bool i_AddCellsToList)
+        private bool isDiagonallyOneBlocking(Cell i_CellToCheck, ref List<Cell> io_CellsToUpdate, Direction i_Direction, bool i_AddCellsToList)
         {
             // this method return true if a blocking sequence has been found in diagonal direction.
             // **(Diagonal one is going up by Y).
@@ -454,26 +439,26 @@ namespace Ex05_Othello.Logic
             bool isBlockFound;
             int row;
 
-            isBlockFound = isBlockingLine(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, i_VerticalDirection, i_HorizontalDirection, out cellIterator);
+            isBlockFound = isBlockingLine(i_CellToCheck, i_Direction, out cellIterator);
             if (isBlockFound && i_AddCellsToList == true)
             {
-                if (i_HorizontalDirection == (int)eDirection.Left && i_VerticalDirection == (int)eDirection.Down)
+                if (i_Direction.Horizontal == (int)Direction.eDirection.Left && i_Direction.Vertical == (int)Direction.eDirection.Down)
                 {
-                    row = i_PlayerMoveRowIndex;
-                    for (int column = i_PlayerMoveColumnIndex; column > cellIterator.Column; column--)
+                    row = i_CellToCheck.Row;
+                    for (int column = i_CellToCheck.Column; column > cellIterator.Column; column--)
                     {
                         io_CellsToUpdate.Add(m_GameBoard.Matrix[row, column]);
-                        row += (int)eDirection.Down;
+                        row += (int)Direction.eDirection.Down;
                     }
                 }
                 else
                 {
                     // elsewise we are going UP and RIGHT
-                    row = i_PlayerMoveRowIndex;
-                    for (int i = i_PlayerMoveColumnIndex; i < cellIterator.Column; i++)
+                    row = i_CellToCheck.Row;
+                    for (int i = i_CellToCheck.Column; i < cellIterator.Column; i++)
                     {
                         io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i]);
-                        row += (int)eDirection.Up;
+                        row += (int)Direction.eDirection.Up;
                     }
                 }
             }
@@ -481,27 +466,27 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isVerticallyBlocking(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, ref List<Cell> io_CellsToUpdate, int i_VerticalDirection, int i_HorizontalDirection, bool i_AddCellsToList)
+        private bool isVerticallyBlocking(Cell i_CellToCheck, ref List<Cell> io_CellsToUpdate, Direction i_Direction, bool i_AddCellsToList)
         {
             // this method return true if a blocking sequence has been found in vertical direction.
             Cell cellIterator = null;
             bool isBlockFound;
 
-            isBlockFound = isBlockingLine(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex, i_VerticalDirection, i_HorizontalDirection, out cellIterator);
+            isBlockFound = isBlockingLine(i_CellToCheck, i_Direction, out cellIterator);
             if (isBlockFound && i_AddCellsToList == true)
             {
-                if (i_VerticalDirection == (int)eDirection.Up)
+                if (i_Direction.Vertical == (int)Direction.eDirection.Up)
                 {
-                    for (int row = i_PlayerMoveRowIndex; row > cellIterator.Row; row--)
+                    for (int row = i_CellToCheck.Row; row > cellIterator.Row; row--)
                     {
-                        io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i_PlayerMoveColumnIndex]);
+                        io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i_CellToCheck.Column]);
                     }
                 }
                 else
                 {
-                    for (int row = i_PlayerMoveRowIndex; row < cellIterator.Row; row++)
+                    for (int row = i_CellToCheck.Row; row < cellIterator.Row; row++)
                     {
-                        io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i_PlayerMoveColumnIndex]);
+                        io_CellsToUpdate.Add(m_GameBoard.Matrix[row, i_CellToCheck.Column]);
                     }
                 }
             }
@@ -509,7 +494,7 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isBlockingLine(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, int i_VerticalDirection, int i_HorizontalDirection, out Cell o_CellIterator)
+        private bool isBlockingLine(Cell i_CellToCheck, Direction i_Direction, out Cell o_CellIterator)
         {
             // this method return true if there is a sequence of legal blocking.
             // in addition, it return the last cell in the sequence as an out parameter.
@@ -517,14 +502,14 @@ namespace Ex05_Othello.Logic
             Cell cellIterator;
             bool isBlockFound, isInBoardLimits;
 
-            currentRow = i_PlayerMoveRowIndex + i_VerticalDirection;
-            currentColumn = i_PlayerMoveColumnIndex + i_HorizontalDirection;
+            currentRow = i_CellToCheck.Row + i_Direction.Vertical;
+            currentColumn = i_CellToCheck.Column + i_Direction.Horizontal;
             isInBoardLimits = GameBoard.IsCellInBoard(currentRow, currentColumn);
             isBlockFound = false;
             if (isInBoardLimits)
             {
                 cellIterator = new Cell(currentRow, currentColumn, m_GameBoard.Matrix[currentRow, currentColumn].Sign);
-                isBlockFound = isSeriesFound(ref cellIterator, i_VerticalDirection, i_HorizontalDirection);
+                isBlockFound = isSeriesFound(ref cellIterator,i_Direction);
             }
             else
             {
@@ -536,7 +521,7 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isSeriesFound(ref Cell i_CellIterator, int i_VerticalDirection, int i_HorizontalDirection)
+        private bool isSeriesFound(ref Cell i_CellIterator, Direction i_Direction)
         {
             // this method get directions, cell by ref
             // this method return true if series of blocks has been found
@@ -556,8 +541,8 @@ namespace Ex05_Othello.Logic
                 // this condition check if the first cell is an enemy and in board, if it is countiue
                 do
                 {
-                    i_CellIterator.Row += i_VerticalDirection;
-                    i_CellIterator.Column += i_HorizontalDirection;
+                    i_CellIterator.Row += i_Direction.Vertical;
+                    i_CellIterator.Column += i_Direction.Horizontal;
                     isInBoardLimits = m_GameBoard.IsCellInBoard(i_CellIterator);
                     if (isInBoardLimits)
                     {

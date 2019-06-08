@@ -6,8 +6,23 @@ namespace Ex05_Othello.Logic
 {
     public struct Direction
     {
+        public enum eDirection
+        {
+            Up = -1,
+            Down = 1,
+            Left = -1,
+            Right = 1,
+            NoDirection = 0
+        }
+
         private int m_Horizontal;
         private int m_Vertical;
+
+        public Direction(int i_Vertical, int i_Horizontal)
+        {
+            m_Vertical = i_Vertical;
+            m_Horizontal = i_Horizontal;
+        }
 
         public int Horizontal
         {
