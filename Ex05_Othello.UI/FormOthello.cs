@@ -12,15 +12,15 @@ namespace Ex05_Othello.UI
     public partial class FormOthello : Form
     {
         private GameLogic m_GameLogic;
-        readonly Image r_RedImage = Properties.Resources.CoinRed;
-        readonly Image r_YellowImage = Properties.Resources.CoinYellow;
+        private readonly Image r_RedImage = Properties.Resources.CoinRed;
+        private readonly Image r_YellowImage = Properties.Resources.CoinYellow;
 
         public GameLogic GameLogic
         {
             get
             {
                 return m_GameLogic;
-           }
+            }
         }
         public FormOthello(GameLogic i_GameLogic, Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
@@ -34,33 +34,36 @@ namespace Ex05_Othello.UI
 
         private void adjustWindowSize(Board.eBoardSize i_BoardSize)
         {
-            int windowLength;
+            int windowLength, picBoxSize, windowMargin, picBoxMargin;
 
             flowLayoutPanelBoard.Top = 10;
             flowLayoutPanelBoard.Left = 10;
-            windowLength = 10 * 2 + 40 * (int)i_BoardSize+((int)i_BoardSize-1)*5 + (int)i_BoardSize/2;
+            picBoxMargin = 5;
+            picBoxSize = flowLayoutPanelBoard.Controls[0].Width;
+            windowMargin = flowLayoutPanelBoard.Top;
+            windowLength = windowMargin * 2 + picBoxSize * (int)i_BoardSize+((int)i_BoardSize-1) * picBoxMargin + (int)i_BoardSize/2;
             flowLayoutPanelBoard.Size = new Size(windowLength, windowLength);
 
         }
 
         public void Initialize()
         {
-            updateBoardPictureBoxesStatus();
-            showPlayersByGameBoard();
+            updateGameBoard();
         }
 
         private void showPlayersByGameBoard()
         {
             PictureBox cellAsPictureBox;
+
             foreach(Cell cell in m_GameLogic.GameBoard.Matrix)
             {
                 cellAsPictureBox = convertCellToPictureBox(cell);
-                if(cell.Sign == (char)Player.ePlayerColor.Red)
+                if(cell.Sign == (char)Player.eColor.Red)
                 {
                     // assign red player image
                     redPlayerPictureBoxStyle(cellAsPictureBox);
                 }
-                else if(cell.Sign == (char)Player.ePlayerColor.Yellow)
+                else if(cell.Sign == (char)Player.eColor.Yellow)
                 {
                     // assign yellow player image
                     yellowPlayerPictureBoxStyle(cellAsPictureBox);
@@ -68,27 +71,12 @@ namespace Ex05_Othello.UI
             }
         }
 
-        private void updateBoardPictureBoxesStatus()
-        {
-            // 1. disable all pictureBoxs in flow and color it gray
-            bool isStyleNeeded = true;
 
-            disableAllBoardPictureBoxes(isStyleNeeded);
-
-            // 2. enable current player pictureBoxs options and color it green
-            enableAllLegalPlayerPictureBoxs(m_GameLogic.Turn);
-        }
-
-        internal void RestartGame()
-        {
-            Initialize();
-        }
-
-        private void enableAllLegalPlayerPictureBoxs(Player.ePlayerColor i_Turn)
+        private void enableAllLegalPlayerPictureBoxs(Player.eColor i_Turn)
         {
             List<Cell> currentPlayerOptionList;
 
-            currentPlayerOptionList = i_Turn == Player.ePlayerColor.Yellow ? m_GameLogic.YellowPlayerOptions : m_GameLogic.RedPlayerOptions;
+            currentPlayerOptionList = i_Turn == Player.eColor.Yellow ? m_GameLogic.YellowPlayerOptions : m_GameLogic.RedPlayerOptions;
             foreach (Cell cell in currentPlayerOptionList)
             {
                 enableRepresentingPictureBox(cell);
@@ -100,13 +88,11 @@ namespace Ex05_Othello.UI
         private void enableRepresentingPictureBox(Cell i_Cell)
         {
             // this method recieve a cell and enableing the representing pictureBox.
-            Control pictureBox;
+            PictureBox pictureBox;
 
             pictureBox = convertCellToPictureBox(i_Cell);
-            //1.enable the representing pictureBox.
-            pictureBox.Enabled = true;
-            //2.style the representing pictureBox.
-            availablePictureBoxStyle(pictureBox as PictureBox);
+            //1. style the representing pictureBox.
+            availablePictureBoxStyle(pictureBox);
         }
 
         private PictureBox convertCellToPictureBox(Cell i_Cell)
@@ -126,6 +112,7 @@ namespace Ex05_Othello.UI
         {
             // this method is styling a disabled pictureBox
             i_PictureBoxToStyle.Image = null;
+            i_PictureBoxToStyle.Enabled = false;
             i_PictureBoxToStyle.BackColor = Color.Gray;
         }
 
@@ -133,32 +120,31 @@ namespace Ex05_Othello.UI
         {
             // this method is styling an available pictureBox
             i_PictureBoxToStyle.Image = null;
+            i_PictureBoxToStyle.Enabled = true;
             i_PictureBoxToStyle.BackColor = Color.Green;
         }
 
         private void yellowPlayerPictureBoxStyle(PictureBox i_PictureBoxToStyle)
         {
             // this method is styling a pictureBox occupied by a yellow player
-            i_PictureBoxToStyle.BackColor = Color.Gray;
             i_PictureBoxToStyle.Image = r_YellowImage;
+            i_PictureBoxToStyle.Enabled = false;
+            i_PictureBoxToStyle.BackColor = Color.Gray;
         }
 
         private void redPlayerPictureBoxStyle(PictureBox i_PictureBoxToStyle)
         {
             // this method is styling a pictureBox occupied by a red player
-            i_PictureBoxToStyle.BackColor = Color.Gray;
             i_PictureBoxToStyle.Image = r_RedImage;
+            i_PictureBoxToStyle.Enabled = false;
+            i_PictureBoxToStyle.BackColor = Color.Gray;
         }
 
-        private void disableAllBoardPictureBoxes(bool i_IsStyleChangeNeeded)
+        private void disableAllBoardPictureBoxes()
         {
             foreach (Control control in flowLayoutPanelBoard.Controls)
             {
-                control.Enabled = false;
-                if(i_IsStyleChangeNeeded)
-                {
-                   disabledPictureBoxStyle(control as PictureBox);
-                }
+               disabledPictureBoxStyle(control as PictureBox);
             }
         }
 
@@ -190,7 +176,6 @@ namespace Ex05_Othello.UI
             pictureBox.Height = 40;
             pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.MouseDown += pictureBoxCell_MouseDown;
-            pictureBox.MouseUp += pictureBoxCell_MouseUp;
 
             return pictureBox;
         }
@@ -210,14 +195,22 @@ namespace Ex05_Othello.UI
 
         private void updateGameBoard()
         {
-            enableAllLegalPlayerPictureBoxs(m_GameLogic.Turn);
+            // 1. disable all cells in game board.
+            disableAllBoardPictureBoxes();
+
+            // 2. show all player in game board. 
             showPlayersByGameBoard();
+
+            // 3. show all legal option for this current turn. 
+            enableAllLegalPlayerPictureBoxs(m_GameLogic.Turn);
+
+            // 4. set the form title according to the player's turn.
             setFormTitle();
         }
 
         private void setFormTitle()
         {
-            Player.ePlayerColor playerTurn;
+            Player.eColor playerTurn;
             string formTitle;
 
             playerTurn = m_GameLogic.Turn;
@@ -225,45 +218,49 @@ namespace Ex05_Othello.UI
             Text = formTitle;
         }
 
-        private void pictureBoxCell_MouseUp(object sender, MouseEventArgs i_E)
-        {
-            bool isPcPlaying, isGameOver, isStyleNeeded = true;
-
-            if(i_E.Button == MouseButtons.Left)
-            {
-                isPcPlaying = m_GameLogic.Mode == GameLogic.eGameMode.HumanVsPC && m_GameLogic.Turn == Player.ePlayerColor.Red;
-                if (isPcPlaying)
-                {
-                    disableAllBoardPictureBoxes(isStyleNeeded);
-                    m_GameLogic.PcPlay();
-                    System.Threading.Thread.Sleep(2000);
-                    updateGameBoard();
-                    isGameOver = m_GameLogic.IsGameOver();
-                    if (isGameOver)
-                    {
-                        m_GameLogic.UpdateWinnerOverallScore();
-                        Close();
-                    }
-                }
-
-            }
-        }
         private void pictureBoxCell_MouseDown(object i_Sender, MouseEventArgs i_E)
         {
-            bool isGameOver;
             int rowIndex, columnIndex;
+            bool isGameOver;
+            
             if (i_E.Button == MouseButtons.Left)
             {
                 m_GameLogic.ExtractCellIndex((i_Sender as PictureBox).Name, out rowIndex, out columnIndex);
                 m_GameLogic.CellChosen(rowIndex, columnIndex);
                 updateGameBoard();
-                isGameOver = m_GameLogic.IsGameOver();
-                if (isGameOver)
+                isGameOver = manageGameOver();
+                if (!isGameOver)
                 {
-                    m_GameLogic.UpdateWinnerOverallScore();
-                    Close();
+                    managePcPlaying();
                 }
             }
+
+        }
+        private void managePcPlaying()
+        {
+            bool isPcPlaying;
+
+            isPcPlaying = m_GameLogic.Mode == GameLogic.eGameMode.HumanVsPC && m_GameLogic.Turn == Player.eColor.Red;
+            if (isPcPlaying)
+            {
+                disableAllBoardPictureBoxes();
+                m_GameLogic.PcPlay();
+                updateGameBoard();
+                manageGameOver();
+            }
+        }
+
+        private bool manageGameOver()
+        {
+            bool isGameOver;
+
+            isGameOver = m_GameLogic.IsGameOver();
+            if (isGameOver)
+            {
+                Close();
+            }
+
+            return isGameOver;
         }
     }
 }

@@ -38,7 +38,6 @@
             this.flowLayoutPanelBoard.Name = "flowLayoutPanelBoard";
             this.flowLayoutPanelBoard.Size = new System.Drawing.Size(310, 346);
             this.flowLayoutPanelBoard.TabIndex = 0;
-            this.flowLayoutPanelBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCell_MouseUp);
             // 
             // FormOthello
             // 
@@ -51,6 +50,7 @@
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.Name = "FormOthello";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Othello - Yellow\'s Turn";
             this.ResumeLayout(false);
 

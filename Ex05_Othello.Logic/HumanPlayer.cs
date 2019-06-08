@@ -6,7 +6,7 @@ namespace Ex05_Othello.Logic
 {
     public class HumanPlayer: Player
     {
-        public HumanPlayer(Player.ePlayerColor i_PlayerColor)
+        public HumanPlayer(Player.eColor i_PlayerColor)
         {
             // Human player c'tor
             m_PlayerColor = i_PlayerColor;

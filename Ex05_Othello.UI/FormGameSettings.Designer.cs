@@ -36,7 +36,7 @@
             // buttonBoardSize
             // 
             this.buttonBoardSize.Location = new System.Drawing.Point(9, 20);
-            this.buttonBoardSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonBoardSize.Margin = new System.Windows.Forms.Padding(2);
             this.buttonBoardSize.Name = "buttonBoardSize";
             this.buttonBoardSize.Size = new System.Drawing.Size(319, 41);
             this.buttonBoardSize.TabIndex = 0;
@@ -47,7 +47,7 @@
             // buttonPlayHumanVsPC
             // 
             this.buttonPlayHumanVsPC.Location = new System.Drawing.Point(9, 98);
-            this.buttonPlayHumanVsPC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonPlayHumanVsPC.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPlayHumanVsPC.Name = "buttonPlayHumanVsPC";
             this.buttonPlayHumanVsPC.Size = new System.Drawing.Size(154, 41);
             this.buttonPlayHumanVsPC.TabIndex = 1;
@@ -58,7 +58,7 @@
             // buttonPlayHumanVsHuman
             // 
             this.buttonPlayHumanVsHuman.Location = new System.Drawing.Point(174, 98);
-            this.buttonPlayHumanVsHuman.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonPlayHumanVsHuman.Margin = new System.Windows.Forms.Padding(2);
             this.buttonPlayHumanVsHuman.Name = "buttonPlayHumanVsHuman";
             this.buttonPlayHumanVsHuman.Size = new System.Drawing.Size(154, 41);
             this.buttonPlayHumanVsHuman.TabIndex = 2;
@@ -70,13 +70,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(337, 160);
             this.Controls.Add(this.buttonPlayHumanVsHuman);
             this.Controls.Add(this.buttonPlayHumanVsPC);
             this.Controls.Add(this.buttonBoardSize);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "FormGameSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Othello - Game Settings";
             this.ResumeLayout(false);
 

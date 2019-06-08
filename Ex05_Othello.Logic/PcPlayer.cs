@@ -13,7 +13,7 @@ namespace Ex05_Othello.Logic
 
         }
 
-        public PcPlayer(Player.ePlayerColor i_PlayerColor)
+        public PcPlayer(Player.eColor i_PlayerColor)
         {
             m_PlayerColor = i_PlayerColor;
         }

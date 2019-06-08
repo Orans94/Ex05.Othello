@@ -23,6 +23,7 @@ namespace Ex05_Othello.UI
                 formOthello = new FormOthello(m_GameLogic, formGameSettings.BoardSize, formGameSettings.GameMode);
                 formOthello.Initialize();
                 Application.Run(formOthello);
+                m_GameLogic.UpdateWinnerOverallScore();
                 dialogResult = endOfRoundDialog(formOthello.GameLogic);
                 restartGame(formOthello);
             }
@@ -55,7 +56,7 @@ namespace Ex05_Othello.UI
                 endOfRoundMessage = string.Format("{0} Won!!({1}/{2})({3}/{4}){5}Would you like another round?", winnerColor, redPlayerRoundScore, yellowPlayerRoundScore,
                    redPlayerOverallScore, yellowPlayerOverallScore, Environment.NewLine);
             }
-            dialogResult = MessageBox.Show(endOfRoundMessage, "Othello", MessageBoxButtons.YesNo);
+            dialogResult = MessageBox.Show(endOfRoundMessage, "Othello", MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
 
             return dialogResult;
         }

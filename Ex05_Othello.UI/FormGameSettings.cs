@@ -26,11 +26,14 @@ namespace Ex05_Othello.UI
 
         private void changeBoardSize()
         {
-            // TODO: maybe add consts?
             string incOrDec;
+            int maxBoardSize, minBoardSize;
 
-            m_BoardSize += (int)m_BoardSize == 12 ? -6 : 2;
-            incOrDec = (int)m_BoardSize == 12 ? "decrease" : "increase";
+            maxBoardSize = (int)Board.eBoardSize.size12x12;
+            minBoardSize = (int)Board.eBoardSize.size6x6;
+
+            m_BoardSize += (int)m_BoardSize == maxBoardSize ? -(maxBoardSize - minBoardSize) : 2;
+            incOrDec = (int)m_BoardSize == maxBoardSize ? "decrease" : "increase";
             buttonBoardSize.Text = string.Format("Board size: {0}x{0} (click to {1})", (int)m_BoardSize, incOrDec);
         }
 

@@ -6,17 +6,17 @@ namespace Ex05_Othello.Logic
 {
     abstract public class Player
     {
-        public enum ePlayerColor
+        public enum eColor
         {
-            Red = 1,
-            Yellow = 0
+            Yellow = '0',
+            Red = '1'
         }
         
         protected int m_CurrentRoundPlayerScore;
         protected int m_OverallPlayerScore = 0;
-        protected ePlayerColor m_PlayerColor;
+        protected eColor m_PlayerColor;
 
-        public virtual ePlayerColor Color
+        public virtual eColor Color
         {
             // a propertie for m_CurrentRoundPlayerScore
             get

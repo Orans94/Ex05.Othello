@@ -81,10 +81,10 @@ namespace Ex05_Othello.Logic
         {
             int difference = ((int)m_BoardSize - (int)Board.eBoardSize.size6x6) / 2;
             clear();
-            m_Board[2 + difference, 2 + difference].Sign = (char)Player.ePlayerColor.Yellow;
-            m_Board[3 + difference, 2 + difference].Sign = (char)Player.ePlayerColor.Red;
-            m_Board[3 + difference, 3 + difference].Sign = (char)Player.ePlayerColor.Yellow;
-            m_Board[2 + difference, 3 + difference].Sign = (char)Player.ePlayerColor.Red;
+            m_Board[2 + difference, 2 + difference].Sign = (char)Player.eColor.Yellow;
+            m_Board[3 + difference, 2 + difference].Sign = (char)Player.eColor.Red;
+            m_Board[3 + difference, 3 + difference].Sign = (char)Player.eColor.Yellow;
+            m_Board[2 + difference, 3 + difference].Sign = (char)Player.eColor.Red;
         }
 
         private void clear()
@@ -96,7 +96,7 @@ namespace Ex05_Othello.Logic
             }
         }
 
-        public void UpdateBoard(List<Cell> i_CellsToUpdate, Player.ePlayerColor i_PlayingPlayer)
+        public void UpdateBoard(List<Cell> i_CellsToUpdate, Player.eColor i_PlayingPlayer)
         {
             // this method recieves a list of cells and a player color and put the correct sign in those cells.
             foreach (Cell currentCell in i_CellsToUpdate)
