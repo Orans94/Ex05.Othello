@@ -79,6 +79,7 @@ namespace Ex05_Othello.Logic
 
         public void Initialize()
         {
+            // this method initialize players opstion according to the board size.
             int difference = ((int)m_BoardSize - (int)Board.eBoardSize.size6x6) / 2;
             clear();
             m_Board[2 + difference, 2 + difference].Sign = (char)Player.eColor.Yellow;

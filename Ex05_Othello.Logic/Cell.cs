@@ -26,6 +26,8 @@ namespace Ex05_Othello.Logic
 
         public override string ToString()
         {
+            // this method is converting the cell index to string
+            // for example: [1,1] -> "B2"
             string cellIndex;
             char cellRow, cellColumn;
 

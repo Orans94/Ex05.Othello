@@ -6,6 +6,7 @@ namespace Ex05_Othello.Logic
 {
     public struct Direction
     {
+        // this struct unite two dimension direction.
         public enum eDirection
         {
             Up = -1,
@@ -20,12 +21,14 @@ namespace Ex05_Othello.Logic
 
         public Direction(int i_Vertical, int i_Horizontal)
         {
+            // Direction c'tor
             m_Vertical = i_Vertical;
             m_Horizontal = i_Horizontal;
         }
 
         public int Horizontal
         {
+            // a propertie for m_Horizontal
             get
             {
 
@@ -40,6 +43,7 @@ namespace Ex05_Othello.Logic
 
         public int Vertical
         {
+            // a propertie for m_Vertical
             get
             {
 

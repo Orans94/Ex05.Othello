@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Ex05_Othello.Logic
 {
-    public class HumanPlayer: Player
+    public class HumanPlayer : Player
     {
         public HumanPlayer(Player.eColor i_PlayerColor)
         {

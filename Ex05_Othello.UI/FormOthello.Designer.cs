@@ -1,6 +1,6 @@
 ﻿namespace Ex05_Othello.UI
 {
-    partial class FormOthello
+    public partial class FormOthello
     {
         /// <summary>
         /// Required designer variable.
@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

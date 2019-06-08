@@ -18,15 +18,18 @@ namespace Ex05_Othello.UI
         public FormGameSettings()
         {
             InitializeComponent();
+            this.Icon = Ex05_Othello.UI.Resource1.icon;
         }
 
-        private void buttonBoardSize_Click(object sender, EventArgs e)
+        private void buttonBoardSize_Click(object i_Sender, EventArgs i_E)
         {
+            // this method is representing an event for changing the board size.
             changeBoardSize();
         }
 
         private void changeBoardSize()
         {
+            // this method is changing the game board size in game settings.
             string incOrDec;
             int maxBoardSize, minBoardSize;
 
@@ -48,7 +51,6 @@ namespace Ex05_Othello.UI
 
             set
             {
-
                 m_BoardSize = value;
             }
         }
@@ -63,7 +65,6 @@ namespace Ex05_Othello.UI
 
             set
             {
-
                 m_GameMode = value;
             }
         }
@@ -76,15 +77,17 @@ namespace Ex05_Othello.UI
             }
         }
 
-        private void buttonPlayHumanVsPC_Click(object sender, EventArgs e)
+        private void buttonPlayHumanVsPC_Click(object i_Sender, EventArgs i_E)
         {
+            // this method represents an event for HumanVsPc button was clicked.
             m_GameMode = GameLogic.eGameMode.HumanVsPC;
             m_FormClosedByUser = false;
             Close();
         }
 
-        private void buttonPlayHumanVsHuman_Click(object sender, EventArgs e)
+        private void buttonPlayHumanVsHuman_Click(object i_Sender, EventArgs i_E)
         {
+            // this method represents an event for HumanVsHuman button was clicked.
             m_GameMode = GameLogic.eGameMode.HumanVsHuman;
             m_FormClosedByUser = false;
             Close();

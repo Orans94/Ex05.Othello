@@ -11,9 +11,9 @@ namespace Ex05_Othello.UI
 {
     public partial class FormOthello : Form
     {
-        private GameLogic m_GameLogic;
         private readonly Image r_RedImage = Properties.Resources.CoinRed;
         private readonly Image r_YellowImage = Properties.Resources.CoinYellow;
+        private GameLogic m_GameLogic;
 
         public GameLogic GameLogic
         {
@@ -22,18 +22,22 @@ namespace Ex05_Othello.UI
                 return m_GameLogic;
             }
         }
+
         public FormOthello(GameLogic i_GameLogic, Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
+            // formOthello c'tor
             m_GameLogic = i_GameLogic;
             InitializeComponent();
             configureGameSettings(i_BoardSize, i_GameMode);
             createGameBoard();
             Initialize();
             adjustWindowSize(i_BoardSize);
+            this.Icon = Ex05_Othello.UI.Resource1.icon;
         }
 
         private void adjustWindowSize(Board.eBoardSize i_BoardSize)
         {
+            // this method is adjusting the window size according to the chosen game board size
             int windowLength, picBoxSize, windowMargin, picBoxMargin;
 
             flowLayoutPanelBoard.Top = 10;
@@ -41,9 +45,8 @@ namespace Ex05_Othello.UI
             picBoxMargin = 5;
             picBoxSize = flowLayoutPanelBoard.Controls[0].Width;
             windowMargin = flowLayoutPanelBoard.Top;
-            windowLength = windowMargin * 2 + picBoxSize * (int)i_BoardSize+((int)i_BoardSize-1) * picBoxMargin + (int)i_BoardSize/2;
+            windowLength = (windowMargin * 2) + (picBoxSize * (int)i_BoardSize) + (((int)i_BoardSize - 1) * picBoxMargin) + ((int)i_BoardSize / 2);
             flowLayoutPanelBoard.Size = new Size(windowLength, windowLength);
-
         }
 
         public void Initialize()
@@ -53,6 +56,7 @@ namespace Ex05_Othello.UI
 
         private void showPlayersByGameBoard()
         {
+            // this method is assigning images to the appropriate picture boxes.
             PictureBox cellAsPictureBox;
 
             foreach(Cell cell in m_GameLogic.GameBoard.Matrix)
@@ -71,9 +75,9 @@ namespace Ex05_Othello.UI
             }
         }
 
-
         private void enableAllLegalPlayerPictureBoxs(Player.eColor i_Turn)
         {
+            // this method is enabling all the picture boxes which represents the possible cells for the current turn
             List<Cell> currentPlayerOptionList;
 
             currentPlayerOptionList = i_Turn == Player.eColor.Yellow ? m_GameLogic.YellowPlayerOptions : m_GameLogic.RedPlayerOptions;
@@ -83,20 +87,20 @@ namespace Ex05_Othello.UI
             }
         }
 
-
-
         private void enableRepresentingPictureBox(Cell i_Cell)
         {
-            // this method recieve a cell and enableing the representing pictureBox.
+            // this method recieve a cell and enabling the representing pictureBox.
             PictureBox pictureBox;
 
             pictureBox = convertCellToPictureBox(i_Cell);
-            //1. style the representing pictureBox.
+
+            // 1. style the representing pictureBox.
             availablePictureBoxStyle(pictureBox);
         }
 
         private PictureBox convertCellToPictureBox(Cell i_Cell)
         {
+            // this method recieves a cell and returns it representing picture box
             Control control;
             PictureBox pictureBox;
             string pictureBoxName;
@@ -142,6 +146,7 @@ namespace Ex05_Othello.UI
 
         private void disableAllBoardPictureBoxes()
         {
+            // this method is disabling all the picture boxes in the panel
             foreach (Control control in flowLayoutPanelBoard.Controls)
             {
                disabledPictureBoxStyle(control as PictureBox);
@@ -150,26 +155,28 @@ namespace Ex05_Othello.UI
 
         private void configureGameSettings(Board.eBoardSize i_BoardSize, GameLogic.eGameMode i_GameMode)
         {
+            // this method is configuring the game settings
             m_GameLogic.configureGameSettings(i_BoardSize, i_GameMode);
             m_GameLogic.Initialize();
         }
 
         private void createGameBoard()
         {
-            
-            for (int i = 0; i < (int)m_GameLogic.GameBoard.Size* (int)m_GameLogic.GameBoard.Size; i++)
+             // this method creates a game board(adding controls to the panel)   
+            for (int i = 0; i < (int)m_GameLogic.GameBoard.Size * (int)m_GameLogic.GameBoard.Size; i++)
             {
                 flowLayoutPanelBoard.Controls.Add(createGameBoardPictureBox(i, (int)m_GameLogic.GameBoard.Size));
             }
         }
 
-        PictureBox createGameBoardPictureBox(int i_PictureBoxNumber, int i_BoardSize)
+        private PictureBox createGameBoardPictureBox(int i_PictureBoxNumber, int i_BoardSize)
         {
+            // this method create a picture box for othello game.
             PictureBox pictureBox = new PictureBox();
             string pictureBoxIndex;
 
             pictureBoxIndex = extractPictureBoxIndex(i_PictureBoxNumber, i_BoardSize);
-            pictureBox.Name = string.Format("pictureBox{0}",pictureBoxIndex);
+            pictureBox.Name = string.Format("pictureBox{0}", pictureBoxIndex);
             pictureBox.BorderStyle = BorderStyle.FixedSingle;
             pictureBox.BackColor = Color.Gray;
             pictureBox.Width = 40;
@@ -182,6 +189,7 @@ namespace Ex05_Othello.UI
 
         private string extractPictureBoxIndex(int i_PictureBoxNumber, int i_BoardSize)
         {
+            // this method recieve a picture box number and return its index
             string pictureBoxIndex;
             char pictureBoxRow, pictureBoxColumn;
 
@@ -192,9 +200,10 @@ namespace Ex05_Othello.UI
             return pictureBoxIndex;
         }
 
-
         private void updateGameBoard()
         {
+            // this method is updating the game board.
+
             // 1. disable all cells in game board.
             disableAllBoardPictureBoxes();
 
@@ -210,6 +219,7 @@ namespace Ex05_Othello.UI
 
         private void setFormTitle()
         {
+            // this method sets the form title according to the current turn
             Player.eColor playerTurn;
             string formTitle;
 
@@ -220,13 +230,14 @@ namespace Ex05_Othello.UI
 
         private void pictureBoxCell_MouseDown(object i_Sender, MouseEventArgs i_E)
         {
+            // this method represent a mouse down event when the user chose a legal cell to play
             int rowIndex, columnIndex;
             bool isGameOver;
             
             if (i_E.Button == MouseButtons.Left)
             {
                 m_GameLogic.ExtractCellIndex((i_Sender as PictureBox).Name, out rowIndex, out columnIndex);
-                m_GameLogic.PlayMove(rowIndex, columnIndex);
+                m_GameLogic.PlayMove(new Cell(rowIndex, columnIndex));
                 manageTurnChanging();
                 updateGameBoard();
                 isGameOver = manageGameOver();
@@ -235,10 +246,11 @@ namespace Ex05_Othello.UI
                     managePcPlaying();
                 }
             }
-
         }
+
         private void managePcPlaying()
         {
+            // this method is managing the pc playing routine.
             bool isPcPlaying;
 
             isPcPlaying = m_GameLogic.Mode == GameLogic.eGameMode.HumanVsPC && m_GameLogic.Turn == Player.eColor.Red;
@@ -253,29 +265,31 @@ namespace Ex05_Othello.UI
 
         private void PcPlay()
         {
-
+            // this method is wrapping the logic pc play
             m_GameLogic.PcPlay();
 
             while (m_GameLogic.Turn == Player.eColor.Red)
             {
-                showTurnHasntBeenChangedDialog();
+                showTurnHasntBeenChangedMessageBox();
                 m_GameLogic.PcPlay();
             }
         }
 
         private void manageTurnChanging()
         {
+            // this method is managing the turn changing routine
             bool isTurnChanged;
 
             isTurnChanged = m_GameLogic.ManageTurnChanging();
             if (!isTurnChanged)
             {
-                showTurnHasntBeenChangedDialog();
+                showTurnHasntBeenChangedMessageBox();
             }
         }
 
-        private void showTurnHasntBeenChangedDialog()
+        private void showTurnHasntBeenChangedMessageBox()
         {
+            // this method is showing a message box which informing the user that a player have no options and the turn hasn't been changed. 
             Player.eColor currentPlayerTurn, outOfOptionPlayer;
             string messageBoxText, messageBoxTitle;
 
@@ -284,11 +298,12 @@ namespace Ex05_Othello.UI
             messageBoxText = string.Format("{0} player you have no options!{1}Its {2}'s turn again!", outOfOptionPlayer.ToString(), Environment.NewLine, currentPlayerTurn.ToString());
             messageBoxTitle = "Turn notice!";
             updateGameBoard();
-            MessageBox.Show(messageBoxText, messageBoxTitle);
+            MessageBox.Show(messageBoxText, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private bool manageGameOver()
         {
+            // this method is managing the game over routine.
             bool isGameOver;
 
             isGameOver = m_GameLogic.IsGameOver();

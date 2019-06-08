@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Ex05_Othello.Logic
 {
-    abstract public class Player
+    public abstract class Player
     {
         public enum eColor
         {
@@ -15,7 +15,7 @@ namespace Ex05_Othello.Logic
         protected int m_CurrentRoundPlayerScore;
         protected int m_OverallPlayerScore = 0;
         protected eColor m_PlayerColor;
-
+         
         public virtual eColor Color
         {
             // a propertie for m_CurrentRoundPlayerScore

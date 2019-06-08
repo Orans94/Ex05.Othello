@@ -28,41 +28,50 @@ namespace Ex05_Othello.Logic
 
         public void getPlayersCurrentRoundScores(out int i_YellowPlayerRoundScore, out int i_RedPlayerRoundScore)
         {
+            // this method return the players round scores by out parameters 
             i_YellowPlayerRoundScore = m_Players[playerIndex(Player.eColor.Yellow)].RoundScore;
             i_RedPlayerRoundScore = m_Players[playerIndex(Player.eColor.Red)].RoundScore;
         }
 
-        public void getCurrentRoundWinner(out string i_WinnerColor, out bool io_IsGameEndedInTie)
+        public void getCurrentRoundWinner(out string o_WinnerColor, out bool o_IsGameEndedInTie)
         {
-            io_IsGameEndedInTie = isGameEndedInTie();
-            if (io_IsGameEndedInTie)
+            // this method return the current round winner by out parameters.
+            o_IsGameEndedInTie = isGameEndedInTie();
+            if (o_IsGameEndedInTie)
             {
-                i_WinnerColor = string.Empty;
+                o_WinnerColor = string.Empty;
             }
             else
             {
-                i_WinnerColor = m_Players[playerIndex(Player.eColor.Yellow)].RoundScore > m_Players[playerIndex(Player.eColor.Red)].RoundScore ? "Yellow" : "Red";
+                o_WinnerColor = m_Players[playerIndex(Player.eColor.Yellow)].RoundScore > m_Players[playerIndex(Player.eColor.Red)].RoundScore ? "Yellow" : "Red";
             }
         }
 
         private bool isGameEndedInTie()
         {
-            return m_Players[playerIndex(Player.eColor.Yellow)].RoundScore == m_Players[playerIndex(Player.eColor.Red)].RoundScore;
+            // this method return true if the game is ended in tie
+            bool isGameEndedInDraw;
+
+            isGameEndedInDraw = m_Players[playerIndex(Player.eColor.Yellow)].RoundScore == m_Players[playerIndex(Player.eColor.Red)].RoundScore;
+
+            return isGameEndedInDraw;
         }
 
-        public void getPlayersOverallScores(out int i_YellowPlayerOverallScore, out int i_RedPlayerOverallScore)
+        public void getPlayersOverallScores(out int o_YellowPlayerOverallScore, out int o_RedPlayerOverallScore)
         {
-            i_YellowPlayerOverallScore = m_Players[playerIndex(Player.eColor.Yellow)].OverallScore;
-            i_RedPlayerOverallScore = m_Players[playerIndex(Player.eColor.Red)].OverallScore;
+            // this method return the overall players scores by out parameters.
+            o_YellowPlayerOverallScore = m_Players[playerIndex(Player.eColor.Yellow)].OverallScore;
+            o_RedPlayerOverallScore = m_Players[playerIndex(Player.eColor.Red)].OverallScore;
         }
 
         public GameLogic()
         {
-
+            // GameLogic c'tor
         }
 
         public List<Player> Players
         {
+            // a propertie for m_Players
             get
             {
 
@@ -77,18 +86,19 @@ namespace Ex05_Othello.Logic
 
         public void configureGameSettings(Board.eBoardSize i_BoardSize, eGameMode i_GameMode)
         {
+            // this method is configuring the game settings
             m_GameBoard = new Board(i_BoardSize);
             m_GameMode = i_GameMode;
             setGameParticipants();
         }
 
-        public void PlayMove(int i_CellRowIndex, int i_CellColumnIndex)
+        public void PlayMove(Cell i_ChosenCell)
         {
             // this method is getting index of a cell and and play according to the index(the cell is surely on option list)
             List<Cell> cellsToUpdate = new List<Cell>();
 
             // 1. add all cells that should be updated to cellToUpdate list!(how?)
-            isPlayerMoveBlockingEnemy(i_CellRowIndex, i_CellColumnIndex, ref cellsToUpdate);
+            isPlayerMoveBlockingEnemy(i_ChosenCell, ref cellsToUpdate);
 
             // 2. update board
             m_GameBoard.UpdateBoard(cellsToUpdate, m_PlayerTurn);
@@ -112,7 +122,7 @@ namespace Ex05_Othello.Logic
 
         private bool isPlayerOptionEmpty(Player.eColor i_PlayerColor)
         {
-            // this method recieve a PlayerColor and check if his options list is empty.
+            // this method recieve a player color and return true if his options list is empty.
             bool isOptionListEmpty;
 
             if (i_PlayerColor == Player.eColor.Red)
@@ -131,13 +141,12 @@ namespace Ex05_Othello.Logic
         public void RestartGame()
         {
             // this method restarts a game.
-            //1. initialize all
             Initialize();
         }
 
         public void UpdateWinnerOverallScore()
         {
-            // this method checks who is the winner of the game and
+            // this method checks who is the winner of the game and updating his overall score
             int yellowPlayerScore, redPlayerScore;
 
             yellowPlayerScore = m_GameBoard.CountSignAppearances((char)Player.eColor.Yellow);
@@ -171,7 +180,7 @@ namespace Ex05_Othello.Logic
         public bool ManageTurnChanging()
         {
             // this method is managing the players turn changing and return true if the turn has been changed.
-            bool isTurnChanged = true; ;
+            bool isTurnChanged = true;
 
             if (m_PlayerTurn == Player.eColor.Red && m_YellowPlayerOptions.Count > 0)
             {
@@ -196,7 +205,7 @@ namespace Ex05_Othello.Logic
 
         public void ExtractCellIndex(string i_CellName, out int o_RowIndex, out int o_ColumnIndex)
         {
-            // this method get a pictureBox name and assign the row and column.
+            // this method get a pictureBox name and assign the row and column by out parameters.
             string cellName;
 
             cellName = i_CellName.Replace("pictureBox", string.Empty);
@@ -206,18 +215,20 @@ namespace Ex05_Othello.Logic
 
         public void PcPlay()
         {
+            // this method is managing pc player play
             int rowIndex, columnIndex;
 
-            (m_Players[playerIndex(Player.eColor.Red)] as PcPlayer).Play(m_GameBoard, out rowIndex, out columnIndex);
-            PlayMove(rowIndex, columnIndex);
+            (m_Players[playerIndex(Player.eColor.Red)] as PcPlayer).PickAMove(m_GameBoard, out rowIndex, out columnIndex);
+            PlayMove(new Cell(rowIndex, columnIndex));
             ManageTurnChanging();
         }
 
         private int playerIndex(Player.eColor i_PlayerColor)
         {
+            // this method recieves a player color and return the index by int
             int index;
 
-            index = (char)(i_PlayerColor) - '0';
+            index = (char)(i_PlayerColor)-'0';
 
             return index;
         }
@@ -330,14 +341,14 @@ namespace Ex05_Othello.Logic
                 if (cellIteator.Sign == Cell.k_Empty)
                 {
                     m_PlayerTurn = Player.eColor.Yellow;
-                    isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
+                    isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
                         m_YellowPlayerOptions.Add(cellIteator);
                     }
 
                     m_PlayerTurn = Player.eColor.Red;
-                    isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator.Row, cellIteator.Column, ref cellList, shouldMethodAddCellsToUpdateList);
+                    isCellAnOption = isPlayerMoveBlockingEnemy(cellIteator, ref cellList, shouldMethodAddCellsToUpdateList);
                     if (isCellAnOption)
                     {
                         m_RedPlayerOptions.Add(cellIteator);
@@ -349,20 +360,20 @@ namespace Ex05_Othello.Logic
             m_PlayerTurn = lastPlayerTurn;
         }
 
-        public bool isPlayerMoveBlockingEnemy(int i_PlayerMoveRowIndex, int i_PlayerMoveColumnIndex, ref List<Cell> io_CellsToUpdate, bool i_AddCellsToList = true)
+        public bool isPlayerMoveBlockingEnemy(Cell i_CellToCheck, ref List<Cell> io_CellsToUpdate, bool i_AddCellsToList = true)
         {
             // this method recieves a player move and return true if the move is blocking the enemy.
             // its also updates the list of cells to update.
             bool isVerticalBlocking, isHorizontalBlocking, isDiagonalOneBlocking, isDiagonalTwoBlocking, isMoveBlockingEnemy;
 
-            isVerticalBlocking = isVerticallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.NoDirection), i_AddCellsToList);
-            isVerticalBlocking = isVerticallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.NoDirection), i_AddCellsToList) || isVerticalBlocking;
-            isHorizontalBlocking = isHorizontallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Left), i_AddCellsToList);
-            isHorizontalBlocking = isHorizontallyBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Right), i_AddCellsToList) || isHorizontalBlocking;
-            isDiagonalOneBlocking = isDiagonallyOneBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Right), i_AddCellsToList);
-            isDiagonalOneBlocking = isDiagonallyOneBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Left), i_AddCellsToList) || isDiagonalOneBlocking;
-            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Left), i_AddCellsToList);
-            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(new Cell(i_PlayerMoveRowIndex, i_PlayerMoveColumnIndex), ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Right), i_AddCellsToList) || isDiagonalTwoBlocking;
+            isVerticalBlocking = isVerticallyBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.NoDirection), i_AddCellsToList);
+            isVerticalBlocking = isVerticallyBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.NoDirection), i_AddCellsToList) || isVerticalBlocking;
+            isHorizontalBlocking = isHorizontallyBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Left), i_AddCellsToList);
+            isHorizontalBlocking = isHorizontallyBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.NoDirection, (int)Direction.eDirection.Right), i_AddCellsToList) || isHorizontalBlocking;
+            isDiagonalOneBlocking = isDiagonallyOneBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Right), i_AddCellsToList);
+            isDiagonalOneBlocking = isDiagonallyOneBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Left), i_AddCellsToList) || isDiagonalOneBlocking;
+            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Up, (int)Direction.eDirection.Left), i_AddCellsToList);
+            isDiagonalTwoBlocking = isDiagonallyTwoBlocking(i_CellToCheck, ref io_CellsToUpdate, new Direction((int)Direction.eDirection.Down, (int)Direction.eDirection.Right), i_AddCellsToList) || isDiagonalTwoBlocking;
             isMoveBlockingEnemy = isVerticalBlocking || isHorizontalBlocking || isDiagonalOneBlocking || isDiagonalTwoBlocking;
 
             return isMoveBlockingEnemy;
@@ -509,7 +520,7 @@ namespace Ex05_Othello.Logic
             if (isInBoardLimits)
             {
                 cellIterator = new Cell(currentRow, currentColumn, m_GameBoard.Matrix[currentRow, currentColumn].Sign);
-                isBlockFound = isSeriesFound(ref cellIterator,i_Direction);
+                isBlockFound = isSeriesFound(ref cellIterator, i_Direction);
             }
             else
             {
@@ -521,7 +532,7 @@ namespace Ex05_Othello.Logic
             return isBlockFound;
         }
 
-        private bool isSeriesFound(ref Cell i_CellIterator, Direction i_Direction)
+        private bool isSeriesFound(ref Cell io_CellIterator, Direction i_Direction)
         {
             // this method get directions, cell by ref
             // this method return true if series of blocks has been found
@@ -530,10 +541,10 @@ namespace Ex05_Othello.Logic
 
             isCellEnemy = false;
             isBlockingLine = false;
-            isInBoardLimits = m_GameBoard.IsCellInBoard(i_CellIterator);
+            isInBoardLimits = m_GameBoard.IsCellInBoard(io_CellIterator);
             if (isInBoardLimits)
             {
-                isCellEnemy = isCellAnEnemy(i_CellIterator, Turn);
+                isCellEnemy = isCellAnEnemy(io_CellIterator, Turn);
             }
 
             if (isInBoardLimits && isCellEnemy)
@@ -541,13 +552,13 @@ namespace Ex05_Othello.Logic
                 // this condition check if the first cell is an enemy and in board, if it is countiue
                 do
                 {
-                    i_CellIterator.Row += i_Direction.Vertical;
-                    i_CellIterator.Column += i_Direction.Horizontal;
-                    isInBoardLimits = m_GameBoard.IsCellInBoard(i_CellIterator);
+                    io_CellIterator.Row += i_Direction.Vertical;
+                    io_CellIterator.Column += i_Direction.Horizontal;
+                    isInBoardLimits = m_GameBoard.IsCellInBoard(io_CellIterator);
                     if (isInBoardLimits)
                     {
-                        i_CellIterator.Sign = m_GameBoard.Matrix[i_CellIterator.Row, i_CellIterator.Column].Sign;
-                        isCellEnemy = isCellAnEnemy(i_CellIterator, Turn);
+                        io_CellIterator.Sign = m_GameBoard.Matrix[io_CellIterator.Row, io_CellIterator.Column].Sign;
+                        isCellEnemy = isCellAnEnemy(io_CellIterator, Turn);
                     }
                 }
                 while (isInBoardLimits && isCellEnemy);
@@ -555,7 +566,7 @@ namespace Ex05_Othello.Logic
                 // check why the while has been stopped
                 if (isInBoardLimits)
                 {
-                    isCharSimilarToMeFound = i_CellIterator.Sign == (char)Turn;
+                    isCharSimilarToMeFound = io_CellIterator.Sign == (char)Turn;
                     if (isCharSimilarToMeFound)
                     {
                         isBlockingLine = true;
